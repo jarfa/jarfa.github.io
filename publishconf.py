@@ -20,8 +20,3 @@ DELETE_OUTPUT_DIRECTORY = True
 
 STATIC_PATHS = ['images', 'extra/CNAME']
 EXTRA_PATH_METADATA = {'extra/CNAME': {'path': 'CNAME'},} #this path leads to where jarfa.github.io should redirect to
-
-# Following items are often useful when publishing
-
-#DISQUS_SITENAME = ""
-#GOOGLE_ANALYTICS = ""
