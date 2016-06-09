@@ -6,7 +6,7 @@ Note: this post doesn't describe original mathematical research on my part. My i
 
 # What is lift?
 
-Imagine that we work at an advertising technology company called [Magnetic](http://www.magnetic.com). We have two ideas for strategies we will use to decide which internet users sees which ads: strategy _A_ and strategy _B_. We already suspect that strategy _B_ is better, and therefore want to know how much better it is.
+Imagine that we work at an advertising technology company called [Magnetic](http://www.magnetic.com). We have two ideas for strategies we will use to decide which internet users see which ads: strategy _A_ and strategy _B_. We already suspect that strategy _B_ is better, and therefore want to know how much better it is.
 
 We use strategy _A_ to show ads to 20,000 people, 400 of whom buy the product we are showing to them (that purchase is called a *conversion* in our industry). Strategy _B_ is used on 1,000 people, 30 of whom buy the product. So strategy _A_ has a 2% conversion rate, while strategy _B_'s conversion rate is 3%. How much better is strategy _B_?
 
@@ -23,7 +23,7 @@ One more caveat - there are two ways to conceive of lift. You could either talk 
 
 For those of you who are not statisticians and therefore don't already trust me that you *should* care about [confidence intervals](https://en.wikipedia.org/wiki/Confidence_interval), I owe you an explanation. 
 
-Let's continue with our example from above: strategy _A_ is shown to 20,000 people and results in 400 conversions, while strategy _B_ is shown to 1,000 people for 30 conversions. We have relatively small sample sizes by the standard of online advertising. 50% lift sounds very impressive, but that's based on 430 positive events. We expect that if we ran this experiment again on the same number of people those numbers would not be the same - so can we actually conclude that strategy _B_ is the way to go? If we gave both strategies 100x more users to show ads to, would strategy _B_ still get us a 1.5x higher conversion rate?
+Let's continue with our example from above: strategy _A_ is shown to 20,000 people and results in 400 conversions, while strategy _B_ is shown to 1,000 people for 30 conversions. We have relatively small sample sizes by the standard of online advertising. 50% lift sounds very impressive, but that's based on only 430 conversions. We expect that if we ran this experiment again on the same number of people those numbers would not be the same - so can we actually conclude that strategy _B_ is the way to go? If we gave both strategies 100x more users to show ads to, would strategy _B_ still get us a 50% higher conversion rate?
 
 Statisticians like to imagine that the gods have endowed both strategies _A_ and _B_ with 'true' conversion rates that are generating this data, and that there therefore exists in the heavens a true lift for strategy _B_ with regards to strategy _A_. A confidence interval would tell us that, given our data and a preference for how confident we'd like to be (let's say 95% just for fun), we can expect that the true lift will be in the computed confidence interval with 95% probability.
 
@@ -46,6 +46,9 @@ Lift is a ratio of two ratios. We already know how ratios of successful attempts
         Pa is positive events (conversions) for A, 
         etc.
         """
+        # The parameters of the beta distribution are:
+        #   alpha = number of successes
+        #   beta = number of failures
         # add 1 to both alpha and beta for a uniform prior 
         cvr_b = np.random.beta(1 + Pa, 1 + Na - Pa, size=Nsim)
         cvr_b = np.random.beta(1 + Pa, 1 + Na - Pa, size=Nsim)
@@ -56,6 +59,7 @@ Now we have a function that will give us as many simulated data points as we wan
     :::python
     def sim_conf_int(Na, Pa, Nb, Pb, interval, Nsim=10**4, CI=0.95):
         simulations = lift_simulations(Na, Pa, Nb, Pb, Nsim=Nsim)
+        # return a tuple of (lower_limit, upper_limit)
         if interval == "upper":
             return (np.percentile(simulations, 100 * (1 - CI)), float("inf"))
         if interval == "lower":
@@ -95,15 +99,17 @@ The basic idea is that `log(1 + lift)` (where lift is what we previously defined
         Pa += e
         Nb += e
         Pb += e
-        log_lift_estimate = math.log((float(Pb) / Nb) / (float(Pa) / Na))
+        log_lift_mean = math.log((float(Pb) / Nb) / (float(Pa) / Na))
+        # if the interval is two-sided then the tail probabilities are cut in half
         pval = (1.0 - CI) / 2 if interval == "two-sided" else (1.0 - CI)
         zval = norm.ppf(1.0 - pval)
         se = math.sqrt((1.0 / Pb) - (1.0 / Nb) + (1.0 / Pa) - (1.0 / Na))
+        # return a tuple of (lower_limit, upper_limit)
         return (
             -1.0 if interval == "lower" else math.exp(
-            	log_lift_estimate - zval * se) - 1,
+            	log_lift_mean - zval * se) - 1,
             float("inf") if interval == "upper" else math.exp(
-            	log_lift_estimate + zval * se) - 1
+            	log_lift_mean + zval * se) - 1
         )
 
 We can use this to find a confidence interval for any level of confidence. The less confident we want to be about the interval, the tighter it will be around 50%.
