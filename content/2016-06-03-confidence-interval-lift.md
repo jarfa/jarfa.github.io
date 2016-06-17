@@ -2,6 +2,8 @@ Title: Finding a Confidence Interval for Lift
 Date: 2016-06-05 16:00
 Category: Blog
 
+This blog post has been [cross-posted](http://tech.magnetic.com/2016/06/finding-a-confidence-interval-for-lift.html) from here to [Magnetic's tech blog](http://tech.magnetic.com/).
+
 Note: this post doesn't describe original mathematical research on my part. My initial motivation to write this post was simply that I was surprised by how hard it was to find a formula for the confidence interval of lift via Google, and decided that I needed to make it easier for the next person who googles "confidence interval for lift" or something along those lines.
 
 # What is lift?
@@ -25,7 +27,7 @@ For those of you who are not statisticians and therefore don't already trust me 
 
 Let's continue with our example from above: strategy _A_ is shown to 20,000 people and results in 400 conversions, while strategy _B_ is shown to 1,000 people for 30 conversions. We have relatively small sample sizes by the standard of online advertising. 50% lift sounds very impressive, but that's based on only 430 conversions. We expect that if we ran this experiment again on the same number of people those numbers would not be the same - so can we actually conclude that strategy _B_ is the way to go? If we gave both strategies 100x more users to show ads to, would strategy _B_ still get us a 50% higher conversion rate?
 
-Statisticians (or to be more specific, Frequentists) like to imagine that the gods have endowed both strategies _A_ and _B_ with 'true' conversion rates that are generating this data, and that there therefore exists in the heavens a true lift for strategy _B_ with regards to strategy _A_. A confidence interval would tell us that, given our a preference for how confident we'd like to be (let's say 95% just for fun), the confidence interval will contain the true lift with 95% probability. Bayesians prefer to use a related concept called the [credible interval](http://freakonometrics.hypotheses.org/18117), but that's beyond the scope of this blog post.
+Statisticians (or to be more specific, Frequentists) like to imagine that the gods have endowed both strategies _A_ and _B_ with 'true' conversion rates that are generating this data, and that there therefore exists in the heavens a true lift for strategy _B_ with regards to strategy _A_. A confidence interval would tell us that, given our preference for how confident we'd like to be (let's say 95% just for fun), the confidence interval will contain the true lift with 95% probability. Bayesians prefer to use a related concept called the [credible interval](http://freakonometrics.hypotheses.org/18117), but that's beyond the scope of this blog post.
 
 More practically, when a product manager asks my team "Is strategy _B_ better than strategy _A_?", we want to answer either "it's better", "it's worse", or "given the sample size we don't know". If the confidence interval on lift includes 0, that would imply we don't have enough data to know whether B is better than A. If the confidence interval lies entirely on the "better" or "worse" sides, we can give them a more interesting answer
 
