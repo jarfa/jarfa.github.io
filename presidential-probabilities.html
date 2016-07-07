@@ -17,11 +17,11 @@
   <meta name="robots" content="" />
 
 <meta name="author" content="Jonathan Arfa" />
-<meta name="description" content="Note: please don't try to read into this blog post any political beliefs or agenda. Markets are interesting. I studied Economics as an undergraduate, and before grad school worked in the energy industry following natural gas commodity markets. This doesn't mean I'm an expert in markets - it ..." />
+<meta name="description" content="Please don't try to read into this blog post any political beliefs or agenda. Markets are interesting. I studied Economics as an undergraduate, and before grad school worked in the energy industry following natural gas commodity markets. This doesn't mean I'm an expert in markets - it just ..." />
 <meta name="keywords" content="">
 <meta property="og:site_name" content="Machine Learning and Tacos"/>
 <meta property="og:title" content="Fun With Presidential Probablities"/>
-<meta property="og:description" content="Note: please don't try to read into this blog post any political beliefs or agenda. Markets are interesting. I studied Economics as an undergraduate, and before grad school worked in the energy industry following natural gas commodity markets. This doesn't mean I'm an expert in markets - it ..."/>
+<meta property="og:description" content="Please don't try to read into this blog post any political beliefs or agenda. Markets are interesting. I studied Economics as an undergraduate, and before grad school worked in the energy industry following natural gas commodity markets. This doesn't mean I'm an expert in markets - it just ..."/>
 <meta property="og:locale" content="en_US"/>
 <meta property="og:url" content="http://jarfa.github.io/presidential-probabilities.html"/>
 <meta property="og:type" content="article"/>
@@ -60,9 +60,9 @@
     <p>Posted on Wed 06 July 2016 in <a href="http://jarfa.github.io/category/blog.html">Blog</a></p>
   </header>
   <div>
-    <p>Note: please don't try to read into this blog post any political beliefs or agenda.</p>
+    <p>Please don't try to read into this blog post any political beliefs or agenda.</p>
 <p>Markets are interesting. I studied Economics as an undergraduate, and before grad school worked in the energy industry following natural gas commodity markets. This doesn't mean I'm an expert in markets - it just means that I indulge my fascination with politics by spending way too much time checking out <a href="https://www.betfair.com/exchange/plus/#/politics/market/1.107373419">Betfair's prediction markets</a> for the upcoming Presidential election.</p>
-<p>In case you're on the internet for the first time this year, this election has been... different. For example, there's talk about how GOP convention delegates might find a way to nominate somebody not named Donald Trump in Cleveland. And until recently a small minority thought there was a chance that Clinton's legal issues would preclue her from running. Which raises the question - <strong>how would a different Democratic or Republican candidate do if they suddenly became the nominee?</strong></p>
+<p>In case you're on the internet for the first time this year, this election has been... different. For example, there's talk about how GOP convention delegates might find a way to nominate somebody not named Donald Trump in Cleveland. And until recently a small minority thought there was a chance that Hillary Clinton's legal issues would preclue her from running. Which raises the question - <strong>how would a different Democratic or Republican candidate do if they suddenly became the nominee?</strong></p>
 <p>We can try to answer this questions using the implied probabilities from Betfair's US election markets. I'm going to make one important assumption - that these betting odds accurately reflect probabilities. I'm not making this assumption because it's necessarily true, I'm making it because it makes this analysis more fun.</p>
 <p>Betfair has markets for the party that will win, who will win each party's nomination, and which person will win the general election. One interesting note on that last market - the rules are very carefully written, and state that:</p>
 <blockquote>
@@ -93,9 +93,9 @@ P(D) = P(D &amp; Clinton) + P(D | ~Clinton)*P(~Clinton)
 
 
 <p>Now we just need to fill in those numbers.</p>
-<p>Betfair gives us decimal odds, and to find the implied probabilites all we have to do is take the inverse of the odds. The last trades (as of 2016.07.06 around 11pm EDT) made for Hillary and Trump to be elected President were 1.37 and 4.3 respectively, which translates into 73.0% and 23.3% probablities for <code>P(R &amp; Trump)</code> and <code>P(D &amp; Clinton)</code>. I'm making the assumption that they can only become President through their respective parties, which is technically false but extremely close to the truth.</p>
-<p>For <code>P(D)</code> and <code>P(R)</code> we get 74.6% and 25.3% from the winning party market. This market unfotunately has low trading volume and a large spread, so its estimates are less trustworthy.</p>
-<p>And we can look at the party nomination markets, where Hillary gets 97.1% and Trump gets 94.3%. That's 2.9% for <code>P(~Clinton)</code> and 5.7% for <code>P(~Trump)</code>.</p>
+<p>Betfair gives us decimal odds, and to find the implied probabilites all we have to do is take the inverse of the odds. The last trades (as of around 11pm EDT on July 6th) made for Hillary and Trump to be elected President were 1.37 and 4.3 respectively, which translates into 73.0% and 23.3% probablities for <code>P(D &amp; Clinton)</code> and <code>P(R &amp; Trump)</code>. I'm making the assumption that they can only become President through their respective parties, which is technically false but extremely close to the truth.</p>
+<p>For <code>P(D)</code> and <code>P(R)</code> we get 74.6% and 25.3% from the last trade on the winning party market. This market unfotunately has low trading volume and a large spread on the Republican side (23.3% - 25.6%), so its estimates are less trustworthy. </p>
+<p>And we can look at the intra-party nomination markets, where Hillary gets 97.1% and Trump gets 94.3%. That's 2.9% for <code>P(~Clinton)</code> and 5.7% for <code>P(~Trump)</code>.</p>
 <p>To put it all together,</p>
 <div class="highlight"><pre><span></span>P(R | ~Trump) = (.253 - .233) / .057 = 35.1%
 </pre></div>
@@ -106,16 +106,16 @@ P(D) = P(D &amp; Clinton) + P(D | ~Clinton)*P(~Clinton)
 
 
 <p>Compare these with the conditional probabilites for the presumptive nominees: </p>
-<div class="highlight"><pre><span></span>P(R | Trump) = .233 / .943 = 24.7%
+<div class="highlight"><pre><span></span>P(R | Trump) = P(R &amp; Trump) / P(Trump) = .233 / .943 = 24.7%
 </pre></div>
 
 
-<div class="highlight"><pre><span></span>P(D | Clinton) = .730 / .971 = 75.2%
+<div class="highlight"><pre><span></span>P(D | Clinton) = P(D &amp; Clinton) / P(Clinton) = .730 / .971 = 75.2%
 </pre></div>
 
 
 <h2>Conclusion (and why you shouldn't take this too seriously)</h2>
-<p>If the GOP delegates pull a #NeverTrump coup in Cleveland, they might expect to do better with their new candidate: a 35% conditional probability of a win versus 25%. Presumably the chaos and hurt feelings of such a coup are priced into this.</p>
+<p>If the GOP delegates pull a #NeverTrump coup in Cleveland, they might expect to do better with their new candidate: a 35% conditional probability of a win versus 25%. Presumably the chaos and hurt feelings of such a coup are priced into this. This isn't the probability that some other candidate would have been better starting in May, it's the probability of a win given a switch in the near future.</p>
 <p>If through some bizarre chain of events a non-Clinton took over this point, they'd be expected to do <em>worse</em> than she would in the general: 55% vs. 75%.</p>
 <p>But to bring us back to reality, you should ignore the above analysis because:<br />
 1. It's a debatable question whether you can actually turn betting odds into implied probabilities, given the house cut, bettors' risk avoidance preferences, etc.<br />
@@ -164,7 +164,7 @@ P(D) = P(D &amp; Clinton) + P(D | ~Clinton)*P(~Clinton)
   },
   "image": "/images/halong_kayak.jpg",
   "url": "http://jarfa.github.io/presidential-probabilities.html",
-  "description": "Note: please don't try to read into this blog post any political beliefs or agenda. Markets are interesting. I studied Economics as an undergraduate, and before grad school worked in the energy industry following natural gas commodity markets. This doesn't mean I'm an expert in markets - it ..."
+  "description": "Please don't try to read into this blog post any political beliefs or agenda. Markets are interesting. I studied Economics as an undergraduate, and before grad school worked in the energy industry following natural gas commodity markets. This doesn't mean I'm an expert in markets - it just ..."
 }
 </script></body>
 </html>
