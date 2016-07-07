@@ -94,7 +94,7 @@ P(D) = P(D &amp; Clinton) + P(D | ~Clinton)*P(~Clinton)
 
 <p>Now we just need to fill in those numbers.</p>
 <p>Betfair gives us decimal odds, and to find the implied probabilites all we have to do is take the inverse of the odds. The last trades (as of 2016.07.06 around 11pm EDT) made for Hillary and Trump to be elected President were 1.37 and 4.3 respectively, which translates into 73.0% and 23.3% probablities for <code>P(R &amp; Trump)</code> and <code>P(D &amp; Clinton)</code>. I'm making the assumption that they can only become President through their respective parties, which is technically false but extremely close to the truth.</p>
-<p>For <code>P(D)</code> and <code>P(R)</code> we get 74.6% and 25.3% from the winning party market (it doesn't have a huge trading volume, which might make its estimates less trustworthy).</p>
+<p>For <code>P(D)</code> and <code>P(R)</code> we get 74.6% and 25.3% from the winning party market. This market unfotunately has low trading volume and a large spread, so its estimates are less trustworthy.</p>
 <p>And we can look at the party nomination markets, where Hillary gets 97.1% and Trump gets 94.3%. That's 2.9% for <code>P(~Clinton)</code> and 5.7% for <code>P(~Trump)</code>.</p>
 <p>To put it all together,</p>
 <div class="highlight"><pre><span></span>P(R | ~Trump) = (.253 - .233) / .057 = 35.1%
@@ -119,7 +119,7 @@ P(D) = P(D &amp; Clinton) + P(D | ~Clinton)*P(~Clinton)
 <p>If through some bizarre chain of events a non-Clinton took over this point, they'd be expected to do <em>worse</em> than she would in the general: 55% vs. 75%.</p>
 <p>But to bring us back to reality, you should ignore the above analysis because:<br />
 1. It's a debatable question whether you can actually turn betting odds into implied probabilities, given the house cut, bettors' risk avoidance preferences, etc.<br />
-2. Some of the markets from which I got the data have low volume, and we therefore shouldn't take their predictions as seriously.<br />
+2. One of the markets I got data from has low volume and a large spread, and we therefore shouldn't take its predictions as seriously.<br />
 3. Betfair only allows betting odds to be at discrete intervals, which means rounding errors can add up.<br />
 4. <code>P(~candidate)</code> refers to all possible other possible candidates in that party. Your favorite candidate might have a lower conditional probability to win than the hypothetical anonymous candidate.</p>
 <p>This was mostly just a fun exercise in probability.</p>
