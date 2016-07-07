@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link href='//fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,400italic' rel='stylesheet' type='text/css'>
+
+    <link rel="stylesheet" type="text/css" href="http://jarfa.github.io/theme/stylesheet/style.min.css">
+
+  <link rel="stylesheet" type="text/css" href="http://jarfa.github.io/theme/stylesheet/pygments.min.css">
+  <link rel="stylesheet" type="text/css" href="http://jarfa.github.io/theme/stylesheet/font-awesome.min.css">
+
+
+
+
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="" />
+
+<meta name="author" content="Jonathan Arfa" />
+<meta name="description" content="Note: please don't try to read into this blog post any political beliefs or agenda. Markets are interesting. I studied Economics as an undergraduate, and before grad school worked in the energy industry following natural gas commodity markets. This doesn't mean I'm an expert in markets - it ..." />
+<meta name="keywords" content="">
+<meta property="og:site_name" content="Machine Learning and Tacos"/>
+<meta property="og:title" content="Fun With Presidential Probablities"/>
+<meta property="og:description" content="Note: please don't try to read into this blog post any political beliefs or agenda. Markets are interesting. I studied Economics as an undergraduate, and before grad school worked in the energy industry following natural gas commodity markets. This doesn't mean I'm an expert in markets - it ..."/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:url" content="http://jarfa.github.io/presidential-probabilities.html"/>
+<meta property="og:type" content="article"/>
+<meta property="article:published_time" content="2016-07-06 23:00:00-04:00"/>
+<meta property="article:modified_time" content=""/>
+<meta property="article:author" content="http://jarfa.github.io/author/jonathan-arfa.html">
+<meta property="article:section" content="Blog"/>
+<meta property="og:image" content="/images/halong_kayak.jpg">
+  <title>Machine Learning and Tacos &ndash; Fun With Presidential Probablities</title>
+</head>
+<body>
+  <aside>
+    <div>
+      <a href="http://jarfa.github.io">
+        <img src="/images/halong_kayak.jpg" alt="Machine Learning and Tacos" title="Machine Learning and Tacos">
+      </a>
+      <h1><a href="http://jarfa.github.io">Machine Learning and Tacos</a></h1>
+      <p>What else?</p>
+      <nav>
+        <ul class="list">
+          <li><a href="http://jarfa.github.io/pages/about.html#about">About</a></li>
+        </ul>
+      </nav>
+      <ul class="social">
+        <li><a class="sc-twitter" href="https://twitter.com/jonarfa" target="_blank"><i class="fa fa-twitter"></i></a></li>
+        <li><a class="sc-linkedin" href="https://www.linkedin.com/in/jarfa" target="_blank"><i class="fa fa-linkedin"></i></a></li>
+        <li><a class="sc-github" href="https://github.com/jarfa/" target="_blank"><i class="fa fa-github"></i></a></li>
+      </ul>
+    </div>
+  </aside>
+  <main>
+
+<article>
+  <header>
+    <h1 id="presidential-probabilities">Fun With Presidential Probablities</h1>
+    <p>Posted on Wed 06 July 2016 in <a href="http://jarfa.github.io/category/blog.html">Blog</a></p>
+  </header>
+  <div>
+    <p>Note: please don't try to read into this blog post any political beliefs or agenda.</p>
+<p>Markets are interesting. I studied Economics as an undergraduate, and before grad school worked in the energy industry following natural gas commodity markets. This doesn't mean I'm an expert in markets - it just means that I indulge my fascination with politics by spending way too much time checking out <a href="https://www.betfair.com/exchange/plus/#/politics/market/1.107373419">Betfair's prediction markets</a> for the upcoming Presidential election.</p>
+<p>In case you're on the internet for the first time this year, this election has been... different. For example, there's talk about how GOP convention delegates might find a way to nominate somebody not named Donald Trump in Cleveland. And until recently a small minority thought there was a chance that Clinton's legal issues would preclue her from running. Which raises the question - <strong>how would a different Democratic or Republican candidate do if they were suddenly became the nominee?</strong></p>
+<p>We can try to answer this questions using the implied probabilities from Betfair's US election markets. I'm going to make one important assumption - that these betting odds accurately reflect probabilities. I'm not making this assumption because it's necessarily true, I'm making it because it makes this analysis more fun.</p>
+<p>Betfair has markets for the party that will win, who will win each party's nomination, and which person will win the general election. One interesting note on that last market - the rules are very carefully written, and state that:</p>
+<blockquote>
+<p>This market will be settled according to the candidate that has the most projected Electoral College votes won at the 2016 presidential election. Any subsequent events such as a ‘faithless elector’ will have no effect on the settlement of this market. In the event that no Presidential candidate receives a majority of the projected Electoral College votes, this market will be settled on the person chosen as President in accordance with the procedures set out by the Twelfth Amendment to the United States Constitution.</p>
+</blockquote>
+<p>Betfair has good lawyers.</p>
+<h2>The Problem, Restated</h2>
+<p>We want to find out the probability of a Republican win given anybody but Trump, or a Democratic win given anybody but Hillary.</p>
+<p>Remember that the probability of a Republican win can be written as </p>
+<div class="highlight"><pre><span></span>P(R) = P(R | Trump)*P(Trump) + P(R | ~Trump)*P(~Trump)
+P(R) = P(R &amp; Trump) + P(R | ~Trump)*P(~Trump)
+</pre></div>
+
+
+<p>Where <code>P(R)</code> denotes the probability of a Republican win, <code>P(Trump)</code> is the probability of a Trump nomination for the GOP ticket (but not necessarily a Trump win), <code>P(R | Trump)</code> is the chance that the Republicans win <em>conditioned</em> on the event that Trump is their nominee, <code>P(R &amp; Trump)</code> is the chance that both Trump is nominated and the GOP wins the Presidency, and <code>~Trump</code> denotes the event where Trump is not the nominee. Similarly, we have:</p>
+<div class="highlight"><pre><span></span>P(D) = P(D | Clinton)*P(Clinton) + P(D | ~Clinton)*P(~Clinton) 
+P(D) = P(D &amp; Clinton) + P(D | ~Clinton)*P(~Clinton)
+</pre></div>
+
+
+<p>After solving for the quantities we actually care about, we get </p>
+<div class="highlight"><pre><span></span>P(R | ~Trump) = (P(R) - P(R &amp; Trump)) / P(~Trump) 
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>P(D | ~Clinton) = (P(D) - P(D &amp; Clinton)) / P(~Clinton)
+</pre></div>
+
+
+<p>Now we just need to fill in those numbers.</p>
+<p>Betfair gives us decimal odds, and to find the implied probabilites all we have to do is take the inverse of the odds. The last trades made for Hillary and Trump to be elected President were 1.37 and 4.3 respectively, which translates into 73.0% and 23.3% probablities for <code>P(R &amp; Trump)</code> and <code>P(D &amp; Clinton)</code>. I'm making the assumption that they can only become President through their respective parties, which is technically false but extremely close to the truth.</p>
+<p>For <code>P(D)</code> and <code>P(R)</code> we get 74.6% and 25.3% from the winning party market (it doesn't have a huge trading volume, which might make its estimates less trustworthy).</p>
+<p>And we can look at the party nomination markets, where Hillary gets 97.1% and Trump gets 94.3%. That's 2.9% for <code>P(~Clinton)</code> and 5.7% for <code>P(~Trump)</code>.</p>
+<p>To put it all together,</p>
+<div class="highlight"><pre><span></span>P(R | ~Trump) = (.253 - .233) / .057 = 35.1%
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>P(D | ~Clinton) = (.746 - .730) / .029 = 55.2%
+</pre></div>
+
+
+<p>Compare these with the conditional probabilites for the presumptive nominees: </p>
+<div class="highlight"><pre><span></span>P(R | Trump) = .233 / .943 = 24.7%
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>P(D | Clinton) = .730 / .971 = 75.2%
+</pre></div>
+
+
+<h2>Conclusion (and why you shouldn't take this too seriously)</h2>
+<p>If the GOP delegates pull a #NeverTrump coup in Cleveland, they might expect to do better with their new candidate: a 35% conditional probability of a win versus 25%. Presumably the chaos and hurt feelings of such a coup are priced into this.</p>
+<p>If through some bizarre chain of events a non-Clinton took over this point, they'd be expected to do <em>worse</em> than she would in the general: 55% vs. 75%.</p>
+<p>But to bring us back to reality, you should ignore the above analysis because:<br />
+1. Some of the markets from which I got the data have low volume, and we therefore shouldn't take their predictions as seriously.<br />
+2. It's a debatable question whether you can actually turn betting odds into implied probabilities, given the house cut, bettors' risk avoidance preferences, etc.<br />
+3. Betfair only allows betting odds to be at discrete intervals, which means rounding errors can add up.<br />
+4. <code>P(~candidate)</code> refers to all possible other possible candidates in that party. Your favorite candidate might have a lower conditional probability to win than the hypothetical anonymous candidate.</p>
+<p>This was a fun exercise in probability, nothing more.</p>
+  </div>
+  <div class="tag-cloud">
+    <p>
+    </p>
+  </div>
+</article>
+
+    <footer>
+        <p>&copy; Jonathan Arfa </p>
+<p>Built using <a href="http://getpelican.com" target="_blank">Pelican</a> - <a href="https://github.com/alexandrevicenzi/flex" target="_blank">Flex</a> theme by <a href="http://alexandrevicenzi.com" target="_blank">Alexandre Vicenzi</a></p>    </footer>
+  </main>
+
+<!-- Google Analytics -->
+<script type="text/javascript">
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-78236307-1', 'auto');
+  ga('send', 'pageview');
+</script>
+<!-- End Google Analytics -->
+
+
+
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "BlogPosting",
+  "name": "Fun With Presidential Probablities",
+  "headline": "Fun With Presidential Probablities",
+  "datePublished": "2016-07-06 23:00:00-04:00",
+  "dateModified": "",
+  "author": {
+    "@type": "Person",
+    "name": "Jonathan Arfa",
+    "url": "http://jarfa.github.io/author/jonathan-arfa.html"
+  },
+  "image": "/images/halong_kayak.jpg",
+  "url": "http://jarfa.github.io/presidential-probabilities.html",
+  "description": "Note: please don't try to read into this blog post any political beliefs or agenda. Markets are interesting. I studied Economics as an undergraduate, and before grad school worked in the energy industry following natural gas commodity markets. This doesn't mean I'm an expert in markets - it ..."
+}
+</script></body>
+</html>
