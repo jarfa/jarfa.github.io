@@ -15,10 +15,12 @@ For now the algorithms include:
 
 *  Random Forests  
 
-I'll be testing these algorithms on the [handwritten digits dataset](http://scikit-learn.org/stable/datasets/index.html#optical-recognition-of-handwritten-digits-data-set) that ships with scikit-learn. The code as written only does binary classification, so for each digit 0-9 I'll define one digit as the target and the rest as non-targets.
+<!-- *  Gradient Boosted Trees -->
+
+I'll be benchmarking these algorithms on the [handwritten digits dataset](http://scikit-learn.org/stable/datasets/index.html#optical-recognition-of-handwritten-digits-data-set) that ships with scikit-learn. The code as written only does binary classification, so for each digit 0-9 I'll define one digit as the target and the rest as non-targets.
 
 ********** 
-## Part I - Motivation
+## Motivation
 
 This project was inspired by a hackathon in the Spring of 2016 when I was working on the engineering team at Magnetic. At Magnetic I had been working on our machine learning systems that used [Vowpal Wabbit](https://github.com/JohnLangford/vowpal_wabbit), and in this hackathon we implemented a similar logistic regression solver in the Go language - which we called Gowpal Wabbit (a large part of projects at Magnetic involved arguing about how to construct a witty/punny name, Gowpal Wabbit was not our most clever). My colleague Dan Crosta wrote a great blog post about [what he learned about logistic regression](https://late.am/post/2016/04/22/demystifying-logistic-regression.html) from the process.
 
@@ -38,13 +40,15 @@ I had a few self-imposed rules for this project:
 
 * Don't go crazy - I'm not going to rewrite my algorithms in Cython or make the code [PyPy](http://pypy.org/) compatible in order to match scikit-learn's speed. The value of this project to me is about making sure I know how to implement these algorithms efficiently, not about minimizing the actual time they require.
 
+## Lessons Learned
+
 Forcing yourself to rewrite from scratch algorithms you think you already know is full of fun discoveries. Things I learned include:
 
 *  You don't need to regularize the bias (a.k.a. intercept) term when fitting a regression model via gradient descent, especially when your input data is normalized (transformed so that the mean is 0 and the standard deviation is 1.) I learned this from colleagues of mine on the [FAIR](https://research.fb.com/category/facebook-ai-research-fair/) team - it's pretty great to work in the same building as Machine Learning luminaries.
 
 *  Something that should have been obvious beforehand - in gradient descent your learning rate and regularization rate should depend greatly on the minibatch size.
 
-*  When I worked on Magnetic's bidding models I used [Vowpal Wabbit (VW)](https://github.com/JohnLangford/vowpal_wabbit/wiki) extensively. In an attempt to mimic VW's behavior, my first implementation of regression SGD used a hash table (the Python dictionary) to store the input data. While this allowed a lot of flexibility when dealing with sparse or categorical data, it resulted in a massive speed hit - especially when regularizing the coefficients. I could've made the hash table work well had I pre-allocated a large array of coefficients and hashed features for the user like VW does. For now I just require the user to turn their data into an array of floats before training the model, but a feature hasher would be easy to implement.
+*  In an attempt to mimic Vowpal Wabbit's behavior, my first implementation of regression SGD used a hash table (the Python dictionary) to store the coefficients. While this allowed a lot of flexibility when dealing with sparse or categorical data, it resulted in a massive speed hit - especially when regularizing the coefficients. I could have made the hash table work well had I pre-allocated a large array of coefficients and hashed features for the user like VW does. For now I just require the user to turn their data into an array of floats before training the model, but a feature hasher would be easy to implement.
 
 *  Writing a fast decision tree algorithm is hard. My implementation is orders of magnitude slower than scikit-learn's, and it could stand to be looked over carefully and optimized. Perhaps I'll go back and do that before I implement new algorithms.
 
