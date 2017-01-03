@@ -74,7 +74,9 @@
 <p>Random Forests  </p>
 </li>
 </ul>
-<p>I'll be testing these algorithms on the <a href="http://scikit-learn.org/stable/datasets/index.html#optical-recognition-of-handwritten-digits-data-set">handwritten digits dataset</a> that ships with scikit-learn. The code as written only does binary classification, so for each digit 0-9 I'll define one digit as the target and the rest as non-targets.</p>
+<!-- *  Gradient Boosted Trees -->
+
+<p>I'll be benchmarking these algorithms on the <a href="http://scikit-learn.org/stable/datasets/index.html#optical-recognition-of-handwritten-digits-data-set">handwritten digits dataset</a> that ships with scikit-learn. The code as written only does binary classification, so for each digit 0-9 I'll define one digit as the target and the rest as non-targets.</p>
 <hr />
 <h2>Part I - Motivation</h2>
 <p>This project was inspired by a hackathon in the Spring of 2016 when I was working on the engineering team at Magnetic. At Magnetic I had been working on our machine learning systems that used <a href="https://github.com/JohnLangford/vowpal_wabbit">Vowpal Wabbit</a>, and in this hackathon we implemented a similar logistic regression solver in the Go language - which we called Gowpal Wabbit (a large part of projects at Magnetic involved arguing about how to construct a witty/punny name, Gowpal Wabbit was not our most clever). My colleague Dan Crosta wrote a great blog post about <a href="https://late.am/post/2016/04/22/demystifying-logistic-regression.html">what he learned about logistic regression</a> from the process.</p>
@@ -105,7 +107,7 @@
 <p>Something that should have been obvious beforehand - in gradient descent your learning rate and regularization rate should depend greatly on the minibatch size.</p>
 </li>
 <li>
-<p>When I worked on Magnetic's bidding models I used <a href="https://github.com/JohnLangford/vowpal_wabbit/wiki">Vowpal Wabbit (VW)</a> extensively. In an attempt to mimic VW's behavior, my first implementation of regression SGD used a hash table (the Python dictionary) to store the input data. While this allowed a lot of flexibility when dealing with sparse or categorical data, it resulted in a massive speed hit - especially when regularizing the coefficients. I could've made the hash table work well had I pre-allocated a large array of coefficients and hashed features for the user like VW does. For now I just require the user to turn their data into an array of floats before training the model, but a feature hasher would be easy to implement.</p>
+<p>In an attempt to mimic Vowpal Wabbit's behavior, my first implementation of regression SGD used a hash table (the Python dictionary) to store the coefficients. While this allowed a lot of flexibility when dealing with sparse or categorical data, it resulted in a massive speed hit - especially when regularizing the coefficients. I could have made the hash table work well had I pre-allocated a large array of coefficients and hashed features for the user like VW does. For now I just require the user to turn their data into an array of floats before training the model, but a feature hasher would be easy to implement.</p>
 </li>
 <li>
 <p>Writing a fast decision tree algorithm is hard. My implementation is orders of magnitude slower than scikit-learn's, and it could stand to be looked over carefully and optimized. Perhaps I'll go back and do that before I implement new algorithms.</p>
