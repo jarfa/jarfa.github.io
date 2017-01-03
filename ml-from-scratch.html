@@ -78,7 +78,7 @@
 
 <p>I'll be benchmarking these algorithms on the <a href="http://scikit-learn.org/stable/datasets/index.html#optical-recognition-of-handwritten-digits-data-set">handwritten digits dataset</a> that ships with scikit-learn. The code as written only does binary classification, so for each digit 0-9 I'll define one digit as the target and the rest as non-targets.</p>
 <hr />
-<h2>Part I - Motivation</h2>
+<h2>Motivation</h2>
 <p>This project was inspired by a hackathon in the Spring of 2016 when I was working on the engineering team at Magnetic. At Magnetic I had been working on our machine learning systems that used <a href="https://github.com/JohnLangford/vowpal_wabbit">Vowpal Wabbit</a>, and in this hackathon we implemented a similar logistic regression solver in the Go language - which we called Gowpal Wabbit (a large part of projects at Magnetic involved arguing about how to construct a witty/punny name, Gowpal Wabbit was not our most clever). My colleague Dan Crosta wrote a great blog post about <a href="https://late.am/post/2016/04/22/demystifying-logistic-regression.html">what he learned about logistic regression</a> from the process.</p>
 <p>While I had learned a lot about the most commonly used algorithms in grad school and at work, writing logistic regression from scratch and teaching a team of software engineers the math and intuition beyond the gradient descent solver made me think much harder about the various choices that go into writing a working implementation. It was a surprisingly educational experience.</p>
 <p>Since then I've changed jobs, and after a traveling a lot in the Summer and Fall of 2016 I've found some free time again. I am (intermittently) writing some of the more commonly used ML algorithms from near-scratch and comparing their performance (both in terms of predictive power and computational efficiency) versus scikit-learn.</p>
@@ -98,6 +98,7 @@
 <p>Don't go crazy - I'm not going to rewrite my algorithms in Cython or make the code <a href="http://pypy.org/">PyPy</a> compatible in order to match scikit-learn's speed. The value of this project to me is about making sure I know how to implement these algorithms efficiently, not about minimizing the actual time they require.</p>
 </li>
 </ul>
+<h2>Lessons Learned</h2>
 <p>Forcing yourself to rewrite from scratch algorithms you think you already know is full of fun discoveries. Things I learned include:</p>
 <ul>
 <li>
