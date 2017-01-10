@@ -18,7 +18,7 @@
 
 <meta name="author" content="Jonathan Arfa" />
 <meta name="description" content="This blog post has been cross-posted from here to Magnetic's tech blog. Note: this post doesn't describe original mathematical research on my part. My initial motivation to write this post was simply that I was surprised by how hard it was to find a formula for the confidence ..." />
-<meta name="keywords" content="">
+<meta name="keywords" content="Statistics">
 <meta property="og:site_name" content="Machine Learning and Tacos"/>
 <meta property="og:title" content="Finding a Confidence Interval for Lift"/>
 <meta property="og:description" content="This blog post has been cross-posted from here to Magnetic's tech blog. Note: this post doesn't describe original mathematical research on my part. My initial motivation to write this post was simply that I was surprised by how hard it was to find a formula for the confidence ..."/>
@@ -29,6 +29,7 @@
 <meta property="article:modified_time" content=""/>
 <meta property="article:author" content="http://jarfa.github.io/author/jonathan-arfa.html">
 <meta property="article:section" content="Blog"/>
+<meta property="article:tag" content="Statistics"/>
 <meta property="og:image" content="/images/halong_kayak.jpg">
   <title>Machine Learning and Tacos &ndash; Finding a Confidence Interval for Lift</title>
 </head>
@@ -80,18 +81,19 @@
 <p>Lift is a ratio of two ratios. We already know how ratios of successful attempts to total attempts are distributed - that's the <a href="https://en.wikipedia.org/wiki/Beta_distribution">Beta distribution</a>. David Robinson has an <a href="http://varianceexplained.org/statistics/beta_distribution_and_baseball/">excellent post</a> explaining its interpretation and usefulness, so I'll refrain from elaborating on that. To simulate the distribution of lift we just need to simulate pairs of beta distributions, and take their quotient. Please ignore the fact that in this blog post I'm switching back and forth between Frequentist and Bayesian approaches.</p>
 <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 
-<span class="k">def</span> <span class="nf">lift_simulations</span><span class="p">(</span><span class="n">Na</span><span class="p">,</span> <span class="n">Pa</span><span class="p">,</span> <span class="n">Nb</span><span class="p">,</span> <span class="n">Pb</span><span class="p">,</span> <span class="n">Nsim</span><span class="o">=</span><span class="mi">10</span><span class="o">**</span><span class="mi">4</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">lift_simulations</span><span class="p">(</span><span class="n">Na</span><span class="p">,</span> <span class="n">Pa</span><span class="p">,</span> <span class="n">Nb</span><span class="p">,</span> <span class="n">Pb</span><span class="p">,</span> <span class="n">Nsim</span><span class="o">=</span><span class="mi">10</span><span class="o">**</span><span class="mi">4</span><span class="p">,</span> <span class="n">prior</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Na is the total events for strategy A,</span>
 <span class="sd">    Pa is positive events (conversions) for A,</span>
 <span class="sd">    etc.</span>
+<span class="sd">    The prior matters most at small sample sizes</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># The parameters of the beta distribution are:</span>
     <span class="c1">#   alpha = number of successes</span>
     <span class="c1">#   beta = number of failures</span>
     <span class="c1"># add 1 to both alpha and beta for a uniform prior</span>
-    <span class="n">cvr_b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">beta</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">Pa</span><span class="p">,</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">Na</span> <span class="o">-</span> <span class="n">Pa</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">Nsim</span><span class="p">)</span>
-    <span class="n">cvr_b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">beta</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">Pa</span><span class="p">,</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">Na</span> <span class="o">-</span> <span class="n">Pa</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">Nsim</span><span class="p">)</span>
+    <span class="n">cvr_b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">beta</span><span class="p">(</span><span class="n">prior</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">Pb</span><span class="p">,</span> <span class="n">prior</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">Nb</span> <span class="o">-</span> <span class="n">Pb</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">Nsim</span><span class="p">)</span>
+    <span class="n">cvr_a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">beta</span><span class="p">(</span><span class="n">prior</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">Pa</span><span class="p">,</span> <span class="n">prior</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">Na</span> <span class="o">-</span> <span class="n">Pa</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">Nsim</span><span class="p">)</span>
     <span class="k">return</span> <span class="p">(</span><span class="n">cvr_b</span> <span class="o">/</span> <span class="n">cvr_a</span><span class="p">)</span> <span class="o">-</span> <span class="mf">1.0</span>
 </pre></div>
 
@@ -171,6 +173,7 @@
   </div>
   <div class="tag-cloud">
     <p>
+      <a href="http://jarfa.github.io/tag/statistics.html">Statistics</a>
     </p>
   </div>
 </article>
