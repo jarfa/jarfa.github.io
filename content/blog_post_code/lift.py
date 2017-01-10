@@ -4,15 +4,16 @@ import math
 from scipy.stats import norm
 import json
 
-def lift_simulations(Na, Pa, Nb, Pb, Nsim=10**4):
+def lift_simulations(Na, Pa, Nb, Pb, Nsim=10**4, prior=(1, 1)):
     """
     Na is the total events for strategy A,
-    Pa is positive events (conversions) for A, 
+    Pa is positive events (conversions) for A,
     etc.
+    The prior matters most at small sample sizes
     """
-    # add 1 to both alpha and beta for a uniform prior 
-    cvr_b = np.random.beta(1 + Pb, 1 + Nb - Pb, size=Nsim)
-    cvr_a = np.random.beta(1 + Pa, 1 + Na - Pa, size=Nsim)
+    # add 1 to both alpha and beta for a uniform prior
+    cvr_b = np.random.beta(prior[0] + Pb, prior[1] + Nb - Pb, size=Nsim)
+    cvr_a = np.random.beta(prior[0] + Pa, prior[1] + Na - Pa, size=Nsim)
     return (cvr_b / cvr_a) - 1.0
 
 
