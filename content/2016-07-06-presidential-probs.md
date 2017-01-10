@@ -2,6 +2,7 @@ Title: Fun With Presidential Probabilities
 Slug: presidential-probabilities
 Date: 2016-07-06 23:00
 Category: Blog
+Tags: Statistics
 
 Please don't try to read into this blog post any political beliefs or agenda. This is simply an exercise in conditional probabilities.
 

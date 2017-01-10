@@ -1,7 +1,8 @@
 Title: Reading & Eating
 Slug: reading-and-eating-july2016
 Date: 2016-07-03 19:00
-Category: Blog, food, reading_eating
+Category: Blog
+Tags: food, reading&eating
 
 I'm trying out a new idea for blog posts - an occasional (monthly?) series on what I'm reading and what I'm eating.
 

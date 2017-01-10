@@ -1,7 +1,8 @@
 Title: Reading & Eating
 Slug: reading-and-eating-jan2017
 Date: 2017-01-02
-Category: Blog, food, reading_eating
+Category: Blog
+Tags: food, reading&eating
 
 ## Reading
 1. Andrej Karpathy reminds you that [**"Yes you should understand backprop"**](https://medium.com/@karpathy/yes-you-should-understand-backprop-e2f06eab496b#.jf28tuhfd). For an intuitive and in-depth intro to backpropogation I recommend his convolutional neural network [lectures](http://cs231n.stanford.edu/).

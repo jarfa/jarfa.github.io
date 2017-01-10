@@ -2,6 +2,7 @@ Title: Machine Learning From Scratch - Pt. I
 Slug: ml-from-scratch
 Date: 2017-01-03
 Category: Blog
+Tags: Machine Learning
 
 ## A self-lead refresher course in basic ML algorithms
 

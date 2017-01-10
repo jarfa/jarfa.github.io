@@ -1,6 +1,7 @@
 Title: Finding a Confidence Interval for Lift
 Date: 2016-06-05 16:00
 Category: Blog
+Tags: Statistics
 
 This blog post has been [cross-posted](http://tech.magnetic.com/2016/06/finding-a-confidence-interval-for-lift.html) from here to [Magnetic's tech blog](http://tech.magnetic.com/).
 
