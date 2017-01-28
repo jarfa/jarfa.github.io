@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link href='//fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,400italic' rel='stylesheet' type='text/css'>
+
+    <link rel="stylesheet" type="text/css" href="http://jarfa.github.io/theme/stylesheet/style.min.css">
+
+  <link rel="stylesheet" type="text/css" href="http://jarfa.github.io/theme/stylesheet/pygments.min.css">
+  <link rel="stylesheet" type="text/css" href="http://jarfa.github.io/theme/stylesheet/font-awesome.min.css">
+
+
+
+
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="" />
+
+<meta name="author" content="Jonathan Arfa" />
+<meta name="description" content="I've grown increasingly frustrated with the way the popular press talks about Machine Learning and Artificial Intelligence (the latter being almost a synonym for the former these days). I think it's possible for somebody with no background in math or programming to speak intelligently about the subject. Machine ..." />
+<meta name="keywords" content="Machine Learning">
+<meta property="og:site_name" content="Machine Learning and Tacos"/>
+<meta property="og:title" content="Machine Learning Without Code"/>
+<meta property="og:description" content="I've grown increasingly frustrated with the way the popular press talks about Machine Learning and Artificial Intelligence (the latter being almost a synonym for the former these days). I think it's possible for somebody with no background in math or programming to speak intelligently about the subject. Machine ..."/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:url" content="http://jarfa.github.io/ml-no-code.html"/>
+<meta property="og:type" content="article"/>
+<meta property="article:published_time" content="2017-01-25 00:00:00-05:00"/>
+<meta property="article:modified_time" content=""/>
+<meta property="article:author" content="http://jarfa.github.io/author/jonathan-arfa.html">
+<meta property="article:section" content="Blog"/>
+<meta property="article:tag" content="Machine Learning"/>
+<meta property="og:image" content="/images/halong_kayak.jpg">
+  <title>Machine Learning and Tacos &ndash; Machine Learning Without Code</title>
+</head>
+<body>
+  <aside>
+    <div>
+      <a href="http://jarfa.github.io">
+        <img src="/images/halong_kayak.jpg" alt="Machine Learning and Tacos" title="Machine Learning and Tacos">
+      </a>
+      <h1><a href="http://jarfa.github.io">Machine Learning and Tacos</a></h1>
+      <p>What else?</p>
+      <nav>
+        <ul class="list">
+          <li><a href="http://jarfa.github.io/pages/about.html#about">About</a></li>
+        </ul>
+      </nav>
+      <ul class="social">
+        <li><a class="sc-twitter" href="https://twitter.com/jonarfa" target="_blank"><i class="fa fa-twitter"></i></a></li>
+        <li><a class="sc-linkedin" href="https://www.linkedin.com/in/jarfa" target="_blank"><i class="fa fa-linkedin"></i></a></li>
+        <li><a class="sc-github" href="https://github.com/jarfa/" target="_blank"><i class="fa fa-github"></i></a></li>
+      </ul>
+    </div>
+  </aside>
+  <main>
+
+<article>
+  <header>
+    <h1 id="ml-no-code">Machine Learning Without Code</h1>
+    <p>Posted on Wed 25 January 2017 in <a href="http://jarfa.github.io/category/blog.html">Blog</a></p>
+  </header>
+  <div>
+    <p>I've grown increasingly frustrated with the way the popular press talks about Machine Learning and Artificial Intelligence (the latter being almost a synonym for the former these days). I think it's possible for somebody with no background in math or programming to speak intelligently about the subject. Machine Learning is a method of solving problems that impacts much of our lives today, and it's important to understand what it can be used for, its limitations, and how it differs from the alternatives.</p>
+<p>Technical note - the title is not strictly correct, this post is only about supervised learning, which is the most common of the three branches of ML<sup>1</sup>. In this blog post I'll tend to use the phrase Machine Learning/ML to mean just supervised learning.</p>
+<h2>Otto the fruit separator</h2>
+<p>Let's say we manage a fruit processing plant. We hire a new employee, and want him to sit next to a conveyor belt of fruit and separate out the apples and the oranges. His name is <a href="https://en.wikipedia.org/wiki/Automaton">Otto</a>. Otto is a very simple guy - he has never seen an apple or an orange, and has absolutely no common sense or ability to make inferences. Otto will do exactly what you tell him quickly and efficiently, but nothing more.</p>
+<p><img alt="Otto" src="http://jarfa.github.io/images/otto.jpg" /><em>Otto</em></p>
+<p>My metaphor was not very subtle, but to be clear - my description of Otto also describes exactly what a computer is. Please keep that in mind whenever people talk about computers "learning" things - after reading this post you should understand a bit more about what it means for ML algorithms to "learn" or "be trained".</p>
+<p>Broadly speaking, there are two ways to teach Otto how to separate apples and oranges: the heuristic way (a.k.a. the normal way) or the Machine Learning way.</p>
+<h2>Apples vs. Oranges by Heuristics</h2>
+<p>We, as managers of a fruit processing plant, know a lot about what apples and oranges look like. So we can just give Otto detailed instructions on how to decide whether a fruit is an apple or an orange, and if we write these instructions wisely then Otto should be able to separate the fruit easily.</p>
+<p>We set up a scanner facing the conveyor belt that scans each incoming fruit. This scanner outputs to a screen the dominant color of the fruit. We then give him a sheet of paper explaining what to do in each case.</p>
+<table>
+<thead>
+<tr>
+<th>Color</th>
+<th>Bucket To Throw Fruit Into</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Red</td>
+<td>Apple</td>
+</tr>
+<tr>
+<td>Orange</td>
+<td>Orange</td>
+</tr>
+<tr>
+<td>Yellow</td>
+<td>Apple</td>
+</tr>
+<tr>
+<td>Green</td>
+<td>Apple</td>
+</tr>
+<tr>
+<td>Anything Else</td>
+<td>Unknown / Mystery Fruit</td>
+</tr>
+</tbody>
+</table>
+<p>There, that was easy. Since Otto doesn't have anything to figure out, he should be able to do a good job from this point on... unless some prankster puts a red bell pepper on the apple vs. orange conveyor belt and makes poor Otto look bad.</p>
+<h2>Apples vs. Oranges by Machine Learning</h2>
+<p>The Machine Learning approach is quite different. We still give Otto his scanner and screen that displays the fruit's color - but instead of giving Otto the instructions on how to decide, we instead spend his first week at work sending fruit down the conveyor belt that we've laboriously hand-labeled with stickers reading "apple" or "orange". In Machine Learning we call these labeled fruit the training data.</p>
+<p>We've also given him a sheet of paper with a table like this:</p>
+<table>
+<thead>
+<tr>
+<th>Color</th>
+<th>Apples</th>
+<th>Oranges</th>
+<th>Unknown</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Red</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Orange</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Green</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>etc.</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>Along with a set of instructions on what to do with this labeled fruit. Specifically, for each labeled fruit he should make a tick mark in the cell of the table corresponding to the color of the fruit and its label. After telling Otto to add up the tick marks (Otto is fantastic at arithmetic when the problem is very clear), it might look like:</p>
+<table>
+<thead>
+<tr>
+<th>Color</th>
+<th>Apples</th>
+<th>Oranges</th>
+<th>Unknown</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Red</td>
+<td>189</td>
+<td>21</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Orange</td>
+<td>41</td>
+<td>275</td>
+<td>3</td>
+</tr>
+<tr>
+<td>Green</td>
+<td>50</td>
+<td>13</td>
+<td>5</td>
+</tr>
+<tr>
+<td>Black</td>
+<td>1</td>
+<td>2</td>
+<td>10</td>
+</tr>
+</tbody>
+</table>
+<p>We should expect that not all fruits identified as green will be apples - because some unripe oranges are green, and sometimes we'll accidentally place the wrong label on a fruit, and sometimes the scanner will malfunction and output the wrong color.</p>
+<p>From there, Otto should go row by row and note which cell had the highest number per row, put an X in that cell, and erase everything else. After a bit of cleanup it might look like:</p>
+<table>
+<thead>
+<tr>
+<th>Color</th>
+<th>Apples</th>
+<th>Oranges</th>
+<th>Unknown</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Red</td>
+<td>X</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Orange</td>
+<td></td>
+<td>X</td>
+<td></td>
+</tr>
+<tr>
+<td>Green</td>
+<td>X</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Black</td>
+<td></td>
+<td></td>
+<td>X</td>
+</tr>
+</tbody>
+</table>
+<p>At this point we've helped Otto create his own set of rules, like the instructions we gave him when separating fruit by heuristics. He can use this table once his training period is over and we start running non-labeled fruit on the conveyor belt. If the incoming fruit is green, for example, he would see that the table has an X for apples in the green row, and throw the new fruit in the apple bucket.</p>
+<p>While this was the simplest algorithm I could think of that would still count as ML, there exist many types of ML algorithms. Most of them are far more complex and powerful than this one - but what they all have in common is that they turn a human-supplied algorithm and human-supplied data into computer-generated rules on which to make decisions.</p>
+<h2>Machine Learning Terms</h2>
+<p>Before we continue, a few terms</p>
+<p><strong>training data</strong> - the labeled examples that the software processes in order to generate rules for new predictions. These were the fruit we put labels on.</p>
+<p><strong>model</strong> - the rules that the computer will generate after processing the training data. This is like the sheet that Otto made after seeing the labeled fruit.</p>
+<p><strong>test data</strong> - data that wasn't used for training. This can either refer to a labeled data set that's used to understand how good the model is, or for unlabeled data the model will have to process once it goes to work. The fruit that Otto processed without labels were his test data.</p>
+<p><strong>feature</strong> - an aspect of an object that we're informing the ML algorithm of. The only feature that Otto saw was color, but we could've used weight, shape, taste, etc.</p>
+<h2>Comparing ML vs. Heuristics</h2>
+<p>The ML method seemed more difficult than the heuristic-based method - and in this case it was almost certainly overkill. Why would we ever use Machine Learning over the heuristic methods?</p>
+<p>Because many problems are harder for humans to write heuristics for. In many cases the complexity of the heuristics would be overwhelming - like helping a self-driving car decide if an image of the road ahead contains a pedestrian. In others the signal is not as complicated, but is obscured by a lot of noise - like predicting which people on a website will click on an ad. A human could spend a lifetime studying online advertising data in order to figure it out - or we could "train" a computer on terabytes of data in a few hours and let it separate the signal from the noise.</p>
+<p>Regardless of whether Machine Learning was a good choice for this example, it is clear that it differs from the heuristic method in key ways. When decisions are made by heuristics, the computer programmer writes out a series of criteria on which the software (or Otto) should make a decision when it sees new data. When Machine Learning is used, however, we're giving the software a detailed method it can use to turn a set of labeled training data into criteria on which to make decisions. A key part of this is finding or creating a good training data set. The software is "learning" only in the ways that we've explicitly told it to learn, and only from examples that we've given it.</p>
+<h2>Machine Learning Challenges</h2>
+<p>If you work with people who build Machine Learning systems, it's important that you understand the challenges and common pitfalls that can hamstring ML systems.</p>
+<h5>Training data must resemble the test data</h5>
+<p>Imagine that our training data includes only green apples, but when Otto's training period is over he's expected to understand that apples can be red or green.</p>
+<p>Alternatively, what if he's trained on apples and oranges but a red bell pepper ends up on the conveyor belt after training. We can't blame Otto for not knowing that it's not an apple. But that's not just an issue of having comparable train/test sets, it's also an issue because we told Otto to only care about color.</p>
+<h5>Feature selection</h5>
+<p>Feature selection is how the human programmer decides what types of information about fruit the ML algorithm should be exposed to.</p>
+<p>In the example above the only feature was color. But this will fail miserably once we add red, green and orange peppers to the conveyor belt - we would need to use additional features (density might work) in order to train Otto to differentiate new types of fruit. </p>
+<h5>Finding or creating labeled training data</h5>
+<p>When training Otto we had to put stickers on hundreds of apples and oranges by hand. That sounds very boring and time-consuming, doesn't it?</p>
+<p>Imagine that we were building an ML-based computer vision  system to detect pedestrians in a roadway. Such systems often require huge amounts of training data to work well, and we can't automate the labeling - because if labeling was already automated, we wouldn't need to build this software. A lot of money is spent on paying people to build good training data sets.</p>
+<p>In general, simple ML models trained on large amounts of good data tend to be more effective than more sophisticated models trained on worse data.</p>
+<h2>Take-Aways</h2>
+<p>I hope you come away from this blog post understanding that Machine Learning is not a silver bullet, and it's not sci-fi style Artificial Intelligence. </p>
+<p>It's an interesting and powerful way to solve many problems. It doesn't take much math and programming skill to start building ML models, and if your interest has been piqued there are many online classes<sup>2</sup> that will explain the details better than I will.</p>
+<hr />
+<p>[1] the other two being unsupervised learning (understanding the structure of unlabeled data, like clustering customers based on their interests) and reinforcement learning (figuring out how sequences of actions lead to good and bad outcomes, like in a video game).</p>
+<p>[2] For a course that uses R, start with this <a href="https://lagunita.stanford.edu/courses/HumanitiesSciences/StatLearning/Winter2016/about">Stanford course</a>.</p>
+  </div>
+  <div class="tag-cloud">
+    <p>
+      <a href="http://jarfa.github.io/tag/machine-learning.html">Machine Learning</a>
+    </p>
+  </div>
+</article>
+
+    <footer>
+        <p>&copy; Jonathan Arfa </p>
+<p>Built using <a href="http://getpelican.com" target="_blank">Pelican</a> - <a href="https://github.com/alexandrevicenzi/flex" target="_blank">Flex</a> theme by <a href="http://alexandrevicenzi.com" target="_blank">Alexandre Vicenzi</a></p>    </footer>
+  </main>
+
+<!-- Google Analytics -->
+<script type="text/javascript">
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-78236307-1', 'auto');
+  ga('send', 'pageview');
+</script>
+<!-- End Google Analytics -->
+
+
+
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "BlogPosting",
+  "name": "Machine Learning Without Code",
+  "headline": "Machine Learning Without Code",
+  "datePublished": "2017-01-25 00:00:00-05:00",
+  "dateModified": "",
+  "author": {
+    "@type": "Person",
+    "name": "Jonathan Arfa",
+    "url": "http://jarfa.github.io/author/jonathan-arfa.html"
+  },
+  "image": "/images/halong_kayak.jpg",
+  "url": "http://jarfa.github.io/ml-no-code.html",
+  "description": "I've grown increasingly frustrated with the way the popular press talks about Machine Learning and Artificial Intelligence (the latter being almost a synonym for the former these days). I think it's possible for somebody with no background in math or programming to speak intelligently about the subject. Machine ..."
+}
+</script></body>
+</html>
