@@ -17,11 +17,11 @@
   <meta name="robots" content="" />
 
 <meta name="author" content="Jonathan Arfa" />
-<meta name="description" content="I've grown increasingly frustrated with the way the popular press talks about Machine Learning and Artificial Intelligence (the latter being almost a synonym for the former these days). I think it's possible for somebody with no background in math or programming to speak intelligently about the subject. Machine ..." />
+<meta name="description" content="I've grown increasingly frustrated with the way the popular press talks about Machine Learning and Artificial Intelligence. I think it's possible for somebody with no background in math or programming to speak intelligently about the subject, and to understand its uses and limitations. A technical note: Machine Learning ..." />
 <meta name="keywords" content="Machine Learning">
 <meta property="og:site_name" content="Machine Learning and Tacos"/>
 <meta property="og:title" content="Machine Learning Without Code"/>
-<meta property="og:description" content="I've grown increasingly frustrated with the way the popular press talks about Machine Learning and Artificial Intelligence (the latter being almost a synonym for the former these days). I think it's possible for somebody with no background in math or programming to speak intelligently about the subject. Machine ..."/>
+<meta property="og:description" content="I've grown increasingly frustrated with the way the popular press talks about Machine Learning and Artificial Intelligence. I think it's possible for somebody with no background in math or programming to speak intelligently about the subject, and to understand its uses and limitations. A technical note: Machine Learning ..."/>
 <meta property="og:locale" content="en_US"/>
 <meta property="og:url" content="http://jarfa.github.io/ml-no-code.html"/>
 <meta property="og:type" content="article"/>
@@ -61,13 +61,13 @@
     <p>Posted on Wed 25 January 2017 in <a href="http://jarfa.github.io/category/blog.html">Blog</a></p>
   </header>
   <div>
-    <p>I've grown increasingly frustrated with the way the popular press talks about Machine Learning and Artificial Intelligence (the latter being almost a synonym for the former these days). I think it's possible for somebody with no background in math or programming to speak intelligently about the subject. Machine Learning is a method of solving problems that impacts much of our lives today, and it's important to understand what it can be used for, its limitations, and how it differs from the alternatives.</p>
-<p>Technical note - the title is not strictly correct, this post is only about supervised learning, which is the most common of the three branches of ML<sup>1</sup>. In this blog post I'll tend to use the phrase Machine Learning/ML to mean just supervised learning.</p>
+    <p>I've grown increasingly frustrated with the way the popular press talks about Machine Learning and Artificial Intelligence. I think it's possible for somebody with no background in math or programming to speak intelligently about the subject, and to understand its uses and limitations.</p>
+<p>A technical note: Machine Learning is usually divided into three branches, the most common of which is supervised learning<sup>1</sup>. In this blog post I will only discuss supervised learning, and to keep things simple I'll use the phrase Machine Learning/ML to mean just that one branch.</p>
 <h2>Otto the fruit separator</h2>
 <p>Let's say we manage a fruit processing plant. We hire a new employee, and want him to sit next to a conveyor belt of fruit and separate out the apples and the oranges. His name is <a href="https://en.wikipedia.org/wiki/Automaton">Otto</a>. Otto is a very simple guy - he has never seen an apple or an orange, and has absolutely no common sense or ability to make inferences. Otto will do exactly what you tell him quickly and efficiently, but nothing more.</p>
 <p><img alt="Otto" src="http://jarfa.github.io/images/otto.jpg" /><em>Otto</em></p>
 <p>My metaphor was not very subtle, but to be clear - my description of Otto also describes exactly what a computer is. Please keep that in mind whenever people talk about computers "learning" things - after reading this post you should understand a bit more about what it means for ML algorithms to "learn" or "be trained".</p>
-<p>Broadly speaking, there are two ways to teach Otto how to separate apples and oranges: the heuristic way (a.k.a. the normal way) or the Machine Learning way.</p>
+<p>Broadly speaking, there are two ways to teach Otto how to separate apples and oranges: the heuristic way or the Machine Learning way.</p>
 <h2>Apples vs. Oranges by Heuristics</h2>
 <p>We, as managers of a fruit processing plant, know a lot about what apples and oranges look like. So we can just give Otto detailed instructions on how to decide whether a fruit is an apple or an orange, and if we write these instructions wisely then Otto should be able to separate the fruit easily.</p>
 <p>We set up a scanner facing the conveyor belt that scans each incoming fruit. This scanner outputs to a screen the dominant color of the fruit. We then give him a sheet of paper explaining what to do in each case.</p>
@@ -86,10 +86,6 @@
 <tr>
 <td>Orange</td>
 <td>Orange</td>
-</tr>
-<tr>
-<td>Yellow</td>
-<td>Apple</td>
 </tr>
 <tr>
 <td>Green</td>
@@ -141,7 +137,7 @@
 </tr>
 </tbody>
 </table>
-<p>Along with a set of instructions on what to do with this labeled fruit. Specifically, for each labeled fruit he should make a tick mark in the cell of the table corresponding to the color of the fruit and its label. After telling Otto to add up the tick marks (Otto is fantastic at arithmetic when the problem is very clear), it might look like:</p>
+<p>Along with a set of instructions on what to do with the labeled fruit. Specifically, for each labeled fruit he should make a tick mark in the cell of the table corresponding to the color of the fruit and its label. After telling Otto to add up the tick marks (Otto is fantastic at arithmetic when the problem is very clear), it might look like:</p>
 <table>
 <thead>
 <tr>
@@ -223,9 +219,9 @@
 <p><strong>training data</strong> - the labeled examples that the software processes in order to generate rules for new predictions. These were the fruit we put labels on.</p>
 <p><strong>model</strong> - the rules that the computer will generate after processing the training data. This is like the sheet that Otto made after seeing the labeled fruit.</p>
 <p><strong>test data</strong> - data that wasn't used for training. This can either refer to a labeled data set that's used to understand how good the model is, or for unlabeled data the model will have to process once it goes to work. The fruit that Otto processed without labels were his test data.</p>
-<p><strong>feature</strong> - an aspect of an object that we're informing the ML algorithm of. The only feature that Otto saw was color, but we could've used weight, shape, taste, etc.</p>
+<p><strong>feature</strong> - an aspect of an object that we're informing the ML algorithm of. The only feature that Otto saw was color, but we could've used weight, shape, smell, etc.</p>
 <h2>Comparing ML vs. Heuristics</h2>
-<p>The ML method seemed more difficult than the heuristic-based method - and in this case it was almost certainly overkill. Why would we ever use Machine Learning over the heuristic methods?</p>
+<p>The ML method seemed more difficult than the heuristic-based method - and in this case it was almost certainly overkill. Why would we ever use Machine Learning over heuristic methods?</p>
 <p>Because many problems are harder for humans to write heuristics for. In many cases the complexity of the heuristics would be overwhelming - like helping a self-driving car decide if an image of the road ahead contains a pedestrian. In others the signal is not as complicated, but is obscured by a lot of noise - like predicting which people on a website will click on an ad. A human could spend a lifetime studying online advertising data in order to figure it out - or we could "train" a computer on terabytes of data in a few hours and let it separate the signal from the noise.</p>
 <p>Regardless of whether Machine Learning was a good choice for this example, it is clear that it differs from the heuristic method in key ways. When decisions are made by heuristics, the computer programmer writes out a series of criteria on which the software (or Otto) should make a decision when it sees new data. When Machine Learning is used, however, we're giving the software a detailed method it can use to turn a set of labeled training data into criteria on which to make decisions. A key part of this is finding or creating a good training data set. The software is "learning" only in the ways that we've explicitly told it to learn, and only from examples that we've given it.</p>
 <h2>Machine Learning Challenges</h2>
@@ -239,7 +235,10 @@
 <h5>Finding or creating labeled training data</h5>
 <p>When training Otto we had to put stickers on hundreds of apples and oranges by hand. That sounds very boring and time-consuming, doesn't it?</p>
 <p>Imagine that we were building an ML-based computer vision  system to detect pedestrians in a roadway. Such systems often require huge amounts of training data to work well, and we can't automate the labeling - because if labeling was already automated, we wouldn't need to build this software. A lot of money is spent on paying people to build good training data sets.</p>
-<p>In general, simple ML models trained on large amounts of good data tend to be more effective than more sophisticated models trained on worse data.</p>
+<p>For many application, simple ML models trained on large amounts of good data tend to be more effective than more sophisticated models trained on worse data.</p>
+<h2>How does Machine Learning relate to Artificial Intelligence?</h2>
+<p>Unfortunately, these days people tend to use these phrases interchangeably.</p>
+<p>The question of what is Artificial Intelligence and how it differs from non-AI computer software is a complex question best left to philosophers. All I'll say here is that to me, <strong>Artificial Intelligence is set of goals and Machine Learning is a set of methods</strong>. These days the cutting-edge breakthroughs in AI tend to be achieved using ML methods, but it doesn't have to be that way. <a href="https://en.wikipedia.org/wiki/Deep_Blue_(chess_computer)">Deep Blue</a> was programmed without any Machine Learning.</p>
 <h2>Take-Aways</h2>
 <p>I hope you come away from this blog post understanding that Machine Learning is not a silver bullet, and it's not sci-fi style Artificial Intelligence. </p>
 <p>It's an interesting and powerful way to solve many problems. It doesn't take much math and programming skill to start building ML models, and if your interest has been piqued there are many online classes<sup>2</sup> that will explain the details better than I will.</p>
@@ -288,7 +287,7 @@
   },
   "image": "/images/halong_kayak.jpg",
   "url": "http://jarfa.github.io/ml-no-code.html",
-  "description": "I've grown increasingly frustrated with the way the popular press talks about Machine Learning and Artificial Intelligence (the latter being almost a synonym for the former these days). I think it's possible for somebody with no background in math or programming to speak intelligently about the subject. Machine ..."
+  "description": "I've grown increasingly frustrated with the way the popular press talks about Machine Learning and Artificial Intelligence. I think it's possible for somebody with no background in math or programming to speak intelligently about the subject, and to understand its uses and limitations. A technical note: Machine Learning ..."
 }
 </script></body>
 </html>
