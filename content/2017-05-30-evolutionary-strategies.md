@@ -4,28 +4,30 @@ Date: 2017-05-30
 Category: Blog
 Tags: Machine Learning
 
-I recently read Ferenc Huszár's [blog post](http://www.inference.vc/evolutionary-strategies-embarrassingly-parallelizable-optimization/) summarizing [recent research](https://arxiv.org/abs/1703.03864) on how evolutionary strategies can be used in place of gradient descent or back-propagation. This research focuses on how evolutionary strategies for reinforcement learning get the same results as back-propagation in a computationally quicker way.
+I recently read Ferenc Huszár's [blog post](http://www.inference.vc/evolutionary-strategies-embarrassingly-parallelizable-optimization/) summarizing [recent research](https://arxiv.org/abs/1703.03864) on how evolutionary strategies can be used in place of gradient descent or back-propagation. That research focuses on how evolutionary strategies for reinforcement learning get the same results as back-propagation in a computationally quicker way.
 
 What I'm doing here differs from that work in two ways.
 
 **1) Differentiable vs. Non-Differentiable Optimization**
 
-If your problem involves optimizing a differentiable function, the question of whether to use evolutionary strategies or gradient descent is mostly a question of computational resources, not outcomes - but for problems in non-differentiable spaces, gradient descent is difficult and evolutionary strategies seem to me to be an easy and effective solution.
+Most recent discussions of evolutionary strategies have focused on optimizing the parameters of a neural network to minimize loss - which is a differentiable function. In that setting either evolutionary strategies or back-propagation should reach a good final outcome, and the debate is therefore mostly a question of computational resources.
 
-For example: let's say you have a machine learning model that classifies [images of hand-written digits](http://scikit-learn.org/stable/datasets/index.html#optical-recognition-of-handwritten-digits-data-set) as one of the numbers 0-9. We might want to know what the model is looking for when it is deciding whether an image contains the number 5 - this could be useful for debugging the model and understanding the ways in which it is likely to perform badly.
+But for problems with non-differentiable objective functions, gradient descent and back-propagation are difficult and evolutionary strategies seem to me to be an easy and effective solution.
 
-If you model is based on regression, you can easily use the model's coefficients to find out what your model considers to be an ideal version of the number 5. If your model is a multi-layer neural network, you can use back-propagation to do the same thing  - which works because the surface of outcomes (e.g. the probability that a given image is the number 5) is differentiable.
+For example: let's say you have a machine learning model that classifies [images of hand-written digits](http://scikit-learn.org/stable/datasets/index.html#optical-recognition-of-handwritten-digits-data-set) as one of the numbers 0-9. We might want to know what the model is looking for when it is deciding whether an image contains the number 5. This could be useful for debugging the model and understanding the ways in which it is likely to perform badly.
+
+If your model is based on regression, you can just use the model's coefficients to find out what your model considers to be an ideal version of the number 5. If your model is a multi-layer neural network, you can use back-propagation to do the same thing  - which works because the surface of outcomes (e.g. the probability that a given image is the number 5) is differentiable.
 
 But what if your model is a random forest? The surface of outcomes is not easily differentiable. Evolutionary strategies can solve this problem.
 
 
 **2) Optimizing Model Parameters vs. Model Input**
 
-As mentioned above - I'm not trying to train a model with evolutionary strategies, I'm trying to figure out which image which most convince the model that it is an image of the number 5. The beauty of evolutionary strategies is that it can be used to optimize any sort of black box function that takes in an input and scores it. It doesn't matter too much whether you're inputting model parameters and outputting logloss, or inputting an image and outputting a probability.
+As mentioned above - I'm not using evolutionary strategies to find the optimal parameters for a model, I'm trying to figure out which image will most convince the model that it is an image of the number 5. The beauty of evolutionary strategies is that it can be used to optimize any sort of black box function that takes in an input and scores it. It doesn't matter too much whether the function takes in model parameters and outputs log-loss, or takes in an image and outputs a probability.
 
 
 ## Demonstration
-The algorithm is very simple - in somewhat plain English, you:
+The algorithm is very simple - in plain English, you:
 
 1. Propose a guess for an image that your model will score highly (for a given digit 0-9).
 
@@ -37,7 +39,7 @@ The algorithm is very simple - in somewhat plain English, you:
 
 5. Repeat #'s 2-4 until you're happy with the results.
 
-This is what the below code does - creates a random forest to classify images of handwriting as digits, and uses evolutionary strategies to figure out what the model considers to be the most ideal version of the digits 0-9
+That is what the below code does - it creates a random forest to classify images of handwriting as digits, and uses evolutionary strategies to figure out what the model considers to be the most ideal version of the digits 0-9
 
 ```python
 import numpy as np
@@ -95,13 +97,13 @@ for target in range(10):
     )
 ```
 
-We can run this same process for any type of supervised learning models and the [code to do this is on my Github page](https://github.com/jarfa/jarfa.github.io/blob/content/content/blog_post_code/evolutionary_optimization.py). A beautiful aspect of this method is how we don't have to change anything for different types of models, we can just treat them as black box scoring machines. Other ways of uncovering this same information would require model-specific methods.
+We can run this same process for any type of supervised learning model, the [code to do this is on my Github page](https://github.com/jarfa/jarfa.github.io/blob/content/content/blog_post_code/evolutionary_optimization.py). This method is convenient because we don't have to change any aspect of it for different types of models, we can just treat them as black box scoring machines. Other ways of finding the same information would require model-specific methods.
 
-As you can see in the below image, it's no surprise that different models differ on what they consider to be the ideal version of a given digit. The y-axis labels denote the digit and the model score (in the 0-1 range) that it converged on. It also shouldn't be too surprising that so many of these images barely look like digits - the models process and understand the data differently than we do, and only see the 5,620 training images.
+Below are the ideal images for each digit for 4 different models. The y-axis labels denote the digit and the model score (in the 0-1 range) that it converged on. It's no surprise that different models differ on what they consider to be the ideal version of a given digit. It also shouldn't be too surprising that so many of these images barely look like digits - the models process and understand the data differently than we do, and they only see the 5,620 training images.
 
 ![Ideal Digits 0-9, By Model]({filename}/images/best_examples_models.png)
 
-We can also create a simple ensemble model that's averages the scores of the other 4 models, and find the optimal image for that model (note that this is different than finding the average optimal image). These images look much closer to what we recognize as digits.
+We can also create a simple ensemble model that averages the scores of the other 4 models, and find the optimal image for that model (note that this is different than finding the average of the other optimal images). The ensemble model's images look much closer to what we recognize as digits.
 
 ![Ideal Digits 0-9, By Model + Ensemble]({filename}/images/best_examples_plus_ensemble.png)
 
