@@ -100,28 +100,25 @@
 </li>
 </ul>
 <h2>Lessons Learned</h2>
-<p>Forcing yourself to rewrite from scratch algorithms you think you already know is full of fun discoveries. Things I learned include:</p>
+<p>Forcing yourself to rewrite from scratch algorithms you think you already know is full of fun discoveries. Things I learned (most of which seem obvious in retrospect) include:</p>
 <ul>
-<li>
-<p>You don't need to regularize the bias (a.k.a. intercept) term when fitting a regression model via gradient descent, especially when your input data is normalized (transformed so that the mean is 0 and the standard deviation is 1.) I learned this from colleagues of mine on the <a href="https://research.fb.com/category/facebook-ai-research-fair/">FAIR</a> team - it's pretty great to work in the same building as Machine Learning luminaries.</p>
-</li>
 <li>
 <p>Something that should have been obvious beforehand - in gradient descent your learning rate and regularization rate should depend greatly on the minibatch size.</p>
 </li>
 <li>
-<p>In an attempt to mimic Vowpal Wabbit's behavior, my first implementation of regression SGD used a hash table (the Python dictionary) to store the coefficients. While this allowed a lot of flexibility when dealing with sparse or categorical data, it resulted in a massive speed hit - especially when regularizing the coefficients. I could have made the hash table work well had I pre-allocated a large array of coefficients and hashed features for the user like VW does. For now I just require the user to turn their data into an array of floats before training the model, but a feature hasher would be easy to implement.</p>
+<p>In an attempt to mimic Vowpal Wabbit's behavior, my first implementation of regression SGD used a hash table (the Python dictionary) to store the coefficients. While this allowed a lot of flexibility when dealing with sparse or categorical data, it resulted in a massive speed hit - especially when regularizing the coefficients. I could have made the hash table work well had I pre-allocated a large array of coefficients and hashed features for the user like VW does. For now I just require the user to turn their data into an array of floats before training the model, but a feature hasher would be easy to implement.
+ow lo</p>
 </li>
 <li>
 <p>Writing a fast decision tree algorithm is hard. My implementation is orders of magnitude slower than scikit-learn's, and it could stand to be looked over carefully and optimized. Perhaps I'll go back and do that before I implement new algorithms.</p>
 </li>
 <li>
-<p>Writing a <a href="https://en.wikipedia.org/wiki/Receiver_operating_characteristic">ROC AUC</a> implementation that runs in O(N^2) time is quite easy - but with a bit of thought, you can make it run in <a href="https://github.com/jarfa/ML_from_scratch/blob/12d91ee4109410855b09aa7da9df345ae79e117d/util.py#L40">O(N) time</a>.</p>
+<p>Implementing the <a href="https://en.wikipedia.org/wiki/Receiver_operating_characteristic">ROC AUC</a> metrics naively will run in O(N^2) time - but with a bit of thought, you can make it run in <a href="https://github.com/jarfa/ML_from_scratch/blob/12d91ee4109410855b09aa7da9df345ae79e117d/util.py#L40">O(N) time</a>.</p>
 </li>
 <li>
 <p><a href="http://ggplot2.org/">R's ggplot2</a> package still has no peer among Python packages for graphics. For a while I've been doing most of my coding in Python, then moving my results to R for plotting with ggplot2. I wanted to use <a href="http://ggplot.yhathq.com/">Python's reimplmentation of ggplot</a> in this project to chart algorithm performance, but it's missing many crucial features and cannot yet replace R's version. <a href="http://seaborn.pydata.org/">Seaborn</a> is similar to ggplot2 in many ways, but is not quite as flexible. And while <a href="http://matplotlib.org/">matplotlib</a> is incredibly flexible, the the brevity and power of R's ggplot2 is far more appealing to me.</p>
 </li>
 </ul>
-<!-- *  Gradient boosted trees sound so simple to implement - just iteratively build trees on the gradients! But there is apparently some some subtlety. My code for this algorithm will go on GitHub once I figure out what I'm doing wrong. -->
   </div>
   <div class="tag-cloud">
     <p>

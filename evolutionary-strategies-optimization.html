@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link href='//fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,400italic' rel='stylesheet' type='text/css'>
+
+    <link rel="stylesheet" type="text/css" href="http://jarfa.github.io/theme/stylesheet/style.min.css">
+
+  <link rel="stylesheet" type="text/css" href="http://jarfa.github.io/theme/stylesheet/pygments.min.css">
+  <link rel="stylesheet" type="text/css" href="http://jarfa.github.io/theme/stylesheet/font-awesome.min.css">
+
+
+
+
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="" />
+
+<meta name="author" content="Jonathan Arfa" />
+<meta name="description" content="I recently read Ferenc Huszár's blog post summarizing recent research on how evolutionary strategies can be used in place of gradient descent or back-propagation. This research focuses on how evolutionary strategies for reinforcement learning get the same results as back-propagation in a computationally quicker way. What I'm doing ..." />
+<meta name="keywords" content="Machine Learning">
+<meta property="og:site_name" content="Machine Learning and Tacos"/>
+<meta property="og:title" content="Easy Optimization With Evolutionary Strategies"/>
+<meta property="og:description" content="I recently read Ferenc Huszár's blog post summarizing recent research on how evolutionary strategies can be used in place of gradient descent or back-propagation. This research focuses on how evolutionary strategies for reinforcement learning get the same results as back-propagation in a computationally quicker way. What I'm doing ..."/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:url" content="http://jarfa.github.io/evolutionary-strategies-optimization.html"/>
+<meta property="og:type" content="article"/>
+<meta property="article:published_time" content="2017-05-30 00:00:00-04:00"/>
+<meta property="article:modified_time" content=""/>
+<meta property="article:author" content="http://jarfa.github.io/author/jonathan-arfa.html">
+<meta property="article:section" content="Blog"/>
+<meta property="article:tag" content="Machine Learning"/>
+<meta property="og:image" content="/images/halong_kayak.jpg">
+  <title>Machine Learning and Tacos &ndash; Easy Optimization With Evolutionary Strategies</title>
+</head>
+<body>
+  <aside>
+    <div>
+      <a href="http://jarfa.github.io">
+        <img src="/images/halong_kayak.jpg" alt="Machine Learning and Tacos" title="Machine Learning and Tacos">
+      </a>
+      <h1><a href="http://jarfa.github.io">Machine Learning and Tacos</a></h1>
+      <p>What else?</p>
+      <nav>
+        <ul class="list">
+          <li><a href="http://jarfa.github.io/pages/about.html#about">About</a></li>
+        </ul>
+      </nav>
+      <ul class="social">
+        <li><a class="sc-twitter" href="https://twitter.com/jonarfa" target="_blank"><i class="fa fa-twitter"></i></a></li>
+        <li><a class="sc-linkedin" href="https://www.linkedin.com/in/jarfa" target="_blank"><i class="fa fa-linkedin"></i></a></li>
+        <li><a class="sc-github" href="https://github.com/jarfa/" target="_blank"><i class="fa fa-github"></i></a></li>
+      </ul>
+    </div>
+  </aside>
+  <main>
+
+<article>
+  <header>
+    <h1 id="evolutionary-strategies-optimization">Easy Optimization With Evolutionary Strategies</h1>
+    <p>Posted on Tue 30 May 2017 in <a href="http://jarfa.github.io/category/blog.html">Blog</a></p>
+  </header>
+  <div>
+    <p>I recently read Ferenc Huszár's <a href="http://www.inference.vc/evolutionary-strategies-embarrassingly-parallelizable-optimization/">blog post</a> summarizing <a href="https://arxiv.org/abs/1703.03864">recent research</a> on how evolutionary strategies can be used in place of gradient descent or back-propagation. This research focuses on how evolutionary strategies for reinforcement learning get the same results as back-propagation in a computationally quicker way.</p>
+<p>What I'm doing here differs from that work in two ways.</p>
+<p><strong>1) Differentiable vs. Non-Differentiable Optimization</strong></p>
+<p>If your problem involves optimizing a differentiable function, the question of whether to use evolutionary strategies or gradient descent is mostly a question of computational resources, not outcomes - but for problems in non-differentiable spaces, gradient descent is difficult and evolutionary strategies seem to me to be an easy and effective solution.</p>
+<p>For example: let's say you have a machine learning model that classifies <a href="http://scikit-learn.org/stable/datasets/index.html#optical-recognition-of-handwritten-digits-data-set">images of hand-written digits</a> as one of the numbers 0-9. We might want to know what the model is looking for when it is deciding whether an image contains the number 5 - this could be useful for debugging the model and understanding the ways in which it is likely to perform badly.</p>
+<p>If you model is based on regression, you can easily use the model's coefficients to find out what your model considers to be an ideal version of the number 5. If your model is a multi-layer neural network, you can use back-propagation to do the same thing  - which works because the surface of outcomes (e.g. the probability that a given image is the number 5) is differentiable.</p>
+<p>But what if your model is a random forest? The surface of outcomes is not easily differentiable. Evolutionary strategies can solve this problem.</p>
+<p><strong>2) Optimizing Model Parameters vs. Model Input</strong></p>
+<p>As mentioned above - I'm not trying to train a model with evolutionary strategies, I'm trying to figure out which image which most convince the model that it is an image of the number 5. The beauty of evolutionary strategies is that it can be used to optimize any sort of black box function that takes in an input and scores it. It doesn't matter too much whether you're inputting model parameters and outputting logloss, or inputting an image and outputting a probability.</p>
+<h2>Demonstration</h2>
+<p>The algorithm is very simple - in somewhat plain English, you:</p>
+<ol>
+<li>
+<p>Propose a guess for an image that your model will score highly (for a given digit 0-9).</p>
+</li>
+<li>
+<p>Generate <code>n_children</code> sets of random noise around that guess, each of which looks like a new image. We can call these the "child" images.</p>
+</li>
+<li>
+<p>Use the model to evaluate how the child images increase or decrease the score.</p>
+</li>
+<li>
+<p>Propose a new guess that's in the direction of the better child images and away from the worse ones.</p>
+</li>
+<li>
+<p>Repeat #'s 2-4 until you're happy with the results.</p>
+</li>
+</ol>
+<p>This is what the below code does - creates a random forest to classify images of handwriting as digits, and uses evolutionary strategies to figure out what the model considers to be the most ideal version of the digits 0-9</p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestClassifier</span>
+<span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">datasets</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+
+<span class="k">def</span> <span class="nf">find_best_img</span><span class="p">(</span><span class="n">score_fn</span><span class="p">,</span> <span class="n">epochs</span><span class="p">,</span> <span class="n">n_children</span><span class="p">,</span> <span class="n">sd</span><span class="p">,</span> <span class="n">lr</span><span class="p">,</span> <span class="n">max_score</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Find an image that gets the highest score on a given model</span>
+<span class="sd">    Assumes that images are all 8*8 pixels with values in the 0-16 range</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="mi">64</span><span class="p">)</span> <span class="o">*</span> <span class="mi">16</span>
+    <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">epochs</span><span class="p">):</span>
+        <span class="n">noise</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">sd</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_children</span><span class="p">)]</span>
+        <span class="n">child_scores</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">score_fn</span><span class="p">(</span><span class="n">img</span> <span class="o">+</span> <span class="n">n</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">noise</span><span class="p">])</span>
+        <span class="n">child_stdev</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">child_scores</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">child_stdev</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">break</span> <span class="c1"># we&#39;ve reached a plateau</span>
+        <span class="c1"># normalize the scores</span>
+        <span class="n">child_scores</span> <span class="o">-=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">child_scores</span><span class="p">)</span>
+        <span class="n">child_scores</span> <span class="o">/=</span> <span class="n">child_stdev</span>
+        <span class="c1"># see the paper and Huszar&#39;s blog post for the math behind this</span>
+        <span class="n">gradient</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">([</span><span class="n">n</span> <span class="o">*</span> <span class="n">s</span> <span class="k">for</span> <span class="n">n</span><span class="p">,</span><span class="n">s</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">noise</span><span class="p">,</span> <span class="n">child_scores</span><span class="p">)],</span>
+                           <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="n">sd</span>
+        <span class="n">img</span> <span class="o">+=</span> <span class="n">lr</span> <span class="o">*</span> <span class="n">gradient</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">16</span><span class="p">)</span> <span class="c1">#constrain pixel values</span>
+        <span class="n">img_score</span> <span class="o">=</span> <span class="n">score_fn</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">img_score</span> <span class="o">&gt;=</span> <span class="n">max_score</span><span class="p">:</span>
+            <span class="k">break</span> <span class="c1"># no reason to continue</span>
+
+    <span class="k">return</span> <span class="n">img</span><span class="p">,</span> <span class="n">img_score</span>
+
+<span class="k">def</span> <span class="nf">score_function</span><span class="p">(</span><span class="n">mod</span><span class="p">,</span> <span class="n">ix</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_scorer</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">mod</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">flatten</span><span class="p">()[</span><span class="n">ix</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">_scorer</span>
+
+<span class="n">digits</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">load_digits</span><span class="p">()</span>
+<span class="n">rf</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">criterion</span><span class="o">=</span><span class="s2">&quot;entropy&quot;</span><span class="p">,</span> <span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+                            <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="c1"># We don&#39;t need a holdout - but we should still care about overfitting, an</span>
+<span class="c1"># overfitted model is less likely to help us find useful or interesting images.</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">rf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">digits</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">digits</span><span class="o">.</span><span class="n">target</span><span class="p">)</span>
+
+<span class="c1"># Now let&#39;s find out what images maximally activate our random forest</span>
+<span class="n">best_images</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">for</span> <span class="n">target</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+    <span class="n">best_images</span><span class="p">[</span><span class="n">target</span><span class="p">]</span> <span class="o">=</span> <span class="n">find_best_img</span><span class="p">(</span>
+        <span class="n">score_function</span><span class="p">(</span><span class="n">rf</span><span class="p">,</span> <span class="n">target</span><span class="p">),</span>
+        <span class="n">epochs</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span>
+        <span class="n">n_children</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span>
+        <span class="n">sd</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+        <span class="n">lr</span><span class="o">=</span><span class="mf">0.75</span>
+    <span class="p">)</span>
+</pre></div>
+
+
+<p>We can run this same process for any type of supervised learning models and the <a href="link_to_code">code to do this is on my Github page</a>. A beautiful aspect of this method is how we don't have to change anything for different types of models, we can just treat them as black box scoring machines. Other ways of uncovering this same information would require model-specific methods.</p>
+<p>As you can see in the below image, it's no surprise that different models differ on what they consider to be the ideal version of a given digit. The y-axis labels denote the digit and the model score (in the 0-1 range) that it converged on. It also shouldn't be too surprising that so many of these images barely look like digits - the models process and understand the data differently than we do, and only see the 5,620 training images.</p>
+<p><img alt="Ideal Digits 0-9, By Model" src="http://jarfa.github.io/images/best_examples_models.png" /></p>
+<p>We can also create a simple ensemble model that's averages the scores of the other 4 models, and find the optimal image for that model (note that this is different than finding the average optimal image). These images look much closer to what we recognize as digits.</p>
+<p><img alt="Ideal Digits 0-9, By Model + Ensemble" src="http://jarfa.github.io/images/best_examples_plus_ensemble.png" /></p>
+  </div>
+  <div class="tag-cloud">
+    <p>
+      <a href="http://jarfa.github.io/tag/machine-learning.html">Machine Learning</a>
+    </p>
+  </div>
+</article>
+
+    <footer>
+        <p>&copy; Jonathan Arfa </p>
+<p>Built using <a href="http://getpelican.com" target="_blank">Pelican</a> - <a href="https://github.com/alexandrevicenzi/flex" target="_blank">Flex</a> theme by <a href="http://alexandrevicenzi.com" target="_blank">Alexandre Vicenzi</a></p>    </footer>
+  </main>
+
+<!-- Google Analytics -->
+<script type="text/javascript">
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-78236307-1', 'auto');
+  ga('send', 'pageview');
+</script>
+<!-- End Google Analytics -->
+
+
+
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "BlogPosting",
+  "name": "Easy Optimization With Evolutionary Strategies",
+  "headline": "Easy Optimization With Evolutionary Strategies",
+  "datePublished": "2017-05-30 00:00:00-04:00",
+  "dateModified": "",
+  "author": {
+    "@type": "Person",
+    "name": "Jonathan Arfa",
+    "url": "http://jarfa.github.io/author/jonathan-arfa.html"
+  },
+  "image": "/images/halong_kayak.jpg",
+  "url": "http://jarfa.github.io/evolutionary-strategies-optimization.html",
+  "description": "I recently read Ferenc Huszár's blog post summarizing recent research on how evolutionary strategies can be used in place of gradient descent or back-propagation. This research focuses on how evolutionary strategies for reinforcement learning get the same results as back-propagation in a computationally quicker way. What I'm doing ..."
+}
+</script></body>
+</html>
