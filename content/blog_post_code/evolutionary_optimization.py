@@ -121,11 +121,11 @@ with open(fname, "w") as f:
 # with open(fname, "r") as f:
 #     results = json.load(f)
 
-# for mod_name in results.keys():
-#     for t in [str(i) for i in range(10)]:
-#         # change the image data back to ndarray
-#         image, score = results[mod_name][t]
-#         results[mod_name][t] = (np.array(image), score)
+for mod_name in results.keys():
+    for t in [str(i) for i in range(10)]:
+        # change the image data back to ndarray
+        image, score = results[mod_name][t]
+        results[mod_name][t] = (np.array(image), score)
 
 
 model_full_names = dict(
