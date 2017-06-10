@@ -43,18 +43,14 @@ I had a few self-imposed rules for this project:
 
 ## Lessons Learned
 
-Forcing yourself to rewrite from scratch algorithms you think you already know is full of fun discoveries. Things I learned include:
-
-*  You don't need to regularize the bias (a.k.a. intercept) term when fitting a regression model via gradient descent, especially when your input data is normalized (transformed so that the mean is 0 and the standard deviation is 1.) I learned this from colleagues of mine on the [FAIR](https://research.fb.com/category/facebook-ai-research-fair/) team - it's pretty great to work in the same building as Machine Learning luminaries.
+Forcing yourself to rewrite from scratch algorithms you think you already know is full of fun discoveries. Things I learned (most of which seem obvious in retrospect) include:
 
 *  Something that should have been obvious beforehand - in gradient descent your learning rate and regularization rate should depend greatly on the minibatch size.
 
 *  In an attempt to mimic Vowpal Wabbit's behavior, my first implementation of regression SGD used a hash table (the Python dictionary) to store the coefficients. While this allowed a lot of flexibility when dealing with sparse or categorical data, it resulted in a massive speed hit - especially when regularizing the coefficients. I could have made the hash table work well had I pre-allocated a large array of coefficients and hashed features for the user like VW does. For now I just require the user to turn their data into an array of floats before training the model, but a feature hasher would be easy to implement.
-
+ow lo
 *  Writing a fast decision tree algorithm is hard. My implementation is orders of magnitude slower than scikit-learn's, and it could stand to be looked over carefully and optimized. Perhaps I'll go back and do that before I implement new algorithms.
 
-*  Writing a [ROC AUC](https://en.wikipedia.org/wiki/Receiver_operating_characteristic) implementation that runs in O(N^2) time is quite easy - but with a bit of thought, you can make it run in [O(N) time](https://github.com/jarfa/ML_from_scratch/blob/12d91ee4109410855b09aa7da9df345ae79e117d/util.py#L40).
+*  Implementing the [ROC AUC](https://en.wikipedia.org/wiki/Receiver_operating_characteristic) metrics naively will run in O(N^2) time - but with a bit of thought, you can make it run in [O(N) time](https://github.com/jarfa/ML_from_scratch/blob/12d91ee4109410855b09aa7da9df345ae79e117d/util.py#L40).
 
 *  [R's ggplot2](http://ggplot2.org/) package still has no peer among Python packages for graphics. For a while I've been doing most of my coding in Python, then moving my results to R for plotting with ggplot2. I wanted to use [Python's reimplmentation of ggplot](http://ggplot.yhathq.com/) in this project to chart algorithm performance, but it's missing many crucial features and cannot yet replace R's version. [Seaborn](http://seaborn.pydata.org/) is similar to ggplot2 in many ways, but is not quite as flexible. And while [matplotlib](http://matplotlib.org/) is incredibly flexible, the the brevity and power of R's ggplot2 is far more appealing to me.
-
-<!-- *  Gradient boosted trees sound so simple to implement - just iteratively build trees on the gradients! But there is apparently some some subtlety. My code for this algorithm will go on GitHub once I figure out what I'm doing wrong. -->
