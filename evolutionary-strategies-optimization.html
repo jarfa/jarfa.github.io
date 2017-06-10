@@ -146,7 +146,7 @@
 </pre></div>
 
 
-<p>We can run this same process for any type of supervised learning models and the <a href="link_to_code">code to do this is on my Github page</a>. A beautiful aspect of this method is how we don't have to change anything for different types of models, we can just treat them as black box scoring machines. Other ways of uncovering this same information would require model-specific methods.</p>
+<p>We can run this same process for any type of supervised learning models and the <a href="https://github.com/jarfa/jarfa.github.io/blob/content/content/blog_post_code/evolutionary_optimization.py">code to do this is on my Github page</a>. A beautiful aspect of this method is how we don't have to change anything for different types of models, we can just treat them as black box scoring machines. Other ways of uncovering this same information would require model-specific methods.</p>
 <p>As you can see in the below image, it's no surprise that different models differ on what they consider to be the ideal version of a given digit. The y-axis labels denote the digit and the model score (in the 0-1 range) that it converged on. It also shouldn't be too surprising that so many of these images barely look like digits - the models process and understand the data differently than we do, and only see the 5,620 training images.</p>
 <p><img alt="Ideal Digits 0-9, By Model" src="http://jarfa.github.io/images/best_examples_models.png" /></p>
 <p>We can also create a simple ensemble model that's averages the scores of the other 4 models, and find the optimal image for that model (note that this is different than finding the average optimal image). These images look much closer to what we recognize as digits.</p>
