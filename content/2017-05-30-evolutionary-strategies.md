@@ -95,7 +95,7 @@ for target in range(10):
     )
 ```
 
-We can run this same process for any type of supervised learning models and the [code to do this is on my Github page](link_to_code). A beautiful aspect of this method is how we don't have to change anything for different types of models, we can just treat them as black box scoring machines. Other ways of uncovering this same information would require model-specific methods.
+We can run this same process for any type of supervised learning models and the [code to do this is on my Github page](https://github.com/jarfa/jarfa.github.io/blob/content/content/blog_post_code/evolutionary_optimization.py). A beautiful aspect of this method is how we don't have to change anything for different types of models, we can just treat them as black box scoring machines. Other ways of uncovering this same information would require model-specific methods.
 
 As you can see in the below image, it's no surprise that different models differ on what they consider to be the ideal version of a given digit. The y-axis labels denote the digit and the model score (in the 0-1 range) that it converged on. It also shouldn't be too surprising that so many of these images barely look like digits - the models process and understand the data differently than we do, and only see the 5,620 training images.
 
