@@ -103,13 +103,12 @@ We can run this same process for any type of supervised learning model, the [cod
 
 Below are the ideal images for each digit for 4 different models. The y-axis labels denote the digit and the model score (in the 0-1 range) that it converged on. It's no surprise that different models differ on what they consider to be the ideal version of a given digit. It also shouldn't be too surprising that so many of these images barely look like digits - the models process and understand the data differently than we do, and they only see the 5,620 training images.
 
-<img src="{filename}/images/best_examples_models.png" alt="Ideal Digits 0-9, By Model" width="500"> 
+<img src="{filename}/images/best_examples_models.png" alt="Ideal Digits 0-9, By Model" width="500">  
 _Ideal Digits 0-9, By Model (y-axis text denotes digit: model_score)_
 
 
 We can also create a simple ensemble model that averages the scores of the other 4 models, and find the optimal image for that model (note that this is different than finding the average of the other 4 optimal images). The ensemble model's images look much closer to what we recognize as digits.
 
-<!-- ![Ideal Digits 0-9, By Model + Ensemble]({filename}/images/best_examples_plus_ensemble.png) -->
 <img src="{filename}/images/best_examples_plus_ensemble.png" alt="Ideal Digits 0-9, By Model + Ensemble" width="625">  
 _Ideal Digits 0-9, By Model + Ensemble_
 
