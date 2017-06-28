@@ -17,11 +17,11 @@
   <meta name="robots" content="" />
 
 <meta name="author" content="Jonathan Arfa" />
-<meta name="description" content="I recently read Ferenc Huszár's blog post summarizing recent research on how evolutionary strategies can be used in place of gradient descent or back-propagation. That research focuses on how evolutionary strategies for reinforcement learning get the same results as back-propagation in a computationally quicker way. What I'm doing ..." />
+<meta name="description" content="I recently read Ferenc Huszár's blog post summarizing recent research on how evolutionary strategies can be used in place of gradient descent or back-propagation. That research focuses on how evolutionary strategies for reinforcement learning get the same results as back-propagation, but the computation is more parallelizable and therefore faster ..." />
 <meta name="keywords" content="Machine Learning">
 <meta property="og:site_name" content="Machine Learning and Tacos"/>
 <meta property="og:title" content="Easy Optimization With Evolutionary Strategies"/>
-<meta property="og:description" content="I recently read Ferenc Huszár's blog post summarizing recent research on how evolutionary strategies can be used in place of gradient descent or back-propagation. That research focuses on how evolutionary strategies for reinforcement learning get the same results as back-propagation in a computationally quicker way. What I'm doing ..."/>
+<meta property="og:description" content="I recently read Ferenc Huszár's blog post summarizing recent research on how evolutionary strategies can be used in place of gradient descent or back-propagation. That research focuses on how evolutionary strategies for reinforcement learning get the same results as back-propagation, but the computation is more parallelizable and therefore faster ..."/>
 <meta property="og:locale" content="en_US"/>
 <meta property="og:url" content="http://jarfa.github.io/evolutionary-strategies-optimization.html"/>
 <meta property="og:type" content="article"/>
@@ -61,16 +61,17 @@
     <p>Posted on Tue 30 May 2017 in <a href="http://jarfa.github.io/category/blog.html">Blog</a></p>
   </header>
   <div>
-    <p>I recently read Ferenc Huszár's <a href="http://www.inference.vc/evolutionary-strategies-embarrassingly-parallelizable-optimization/">blog post</a> summarizing <a href="https://arxiv.org/abs/1703.03864">recent research</a> on how evolutionary strategies can be used in place of gradient descent or back-propagation. That research focuses on how evolutionary strategies for reinforcement learning get the same results as back-propagation in a computationally quicker way.</p>
-<p>What I'm doing here differs from that work in two ways.</p>
+    <p>I recently read Ferenc Huszár's <a href="http://www.inference.vc/evolutionary-strategies-embarrassingly-parallelizable-optimization/">blog post</a> summarizing <a href="https://arxiv.org/abs/1703.03864">recent research</a> on how evolutionary strategies can be used in place of gradient descent or back-propagation. That research focuses on how evolutionary strategies for reinforcement learning get the same results as back-propagation, but the computation is more parallelizable and therefore faster.</p>
+<p>This method caught my attention because it's incredibly flexible, and can be used to optimize many sort of problems beyond finding this optimal parameters for a machine learning model.</p>
+<p>I decided to have some fun with it, and see whether evolutionary strategies can help us interpret machine learning models. What I'm doing here differs from the previous work in two ways.</p>
 <p><strong>1) Differentiable vs. Non-Differentiable Optimization</strong></p>
-<p>Most recent discussions of evolutionary strategies have focused on optimizing the parameters of a neural network to minimize loss - which is a differentiable function. In that setting either evolutionary strategies or back-propagation should reach a good final outcome, and the debate is therefore mostly a question of computational resources.</p>
+<p>Most recent discussions of evolutionary strategies have focused on optimizing the parameters of a neural network to minimize loss - which should be a differentiable function. In that setting either evolutionary strategies or back-propagation should reach a good final outcome (since evolutionary strategies are simply finding the gradient through trial-and-error), and the debate is therefore mostly a question of computational resources.</p>
 <p>But for problems with non-differentiable objective functions, gradient descent and back-propagation are difficult and evolutionary strategies seem to me to be an easy and effective solution.</p>
 <p>For example: let's say you have a machine learning model that classifies <a href="http://scikit-learn.org/stable/datasets/index.html#optical-recognition-of-handwritten-digits-data-set">images of hand-written digits</a> as one of the numbers 0-9. We might want to know what the model is looking for when it is deciding whether an image contains the number 5. This could be useful for debugging the model and understanding the ways in which it is likely to perform badly.</p>
-<p>If your model is based on regression, you can just use the model's coefficients to find out what your model considers to be an ideal version of the number 5. If your model is a multi-layer neural network, you can use back-propagation to do the same thing  - which works because the surface of outcomes (e.g. the probability that a given image is the number 5) is differentiable.</p>
+<p>If your model is based on regression, you can just use the model's coefficients to find out what your model considers to be an ideal version of the number 5. If your model is a multi-layer neural network, you can use back-propagation to do the same thing - which works because the surface of outcomes (i.e. the probability that a given image is the number 5) is differentiable.</p>
 <p>But what if your model is a random forest? The surface of outcomes is not easily differentiable. Evolutionary strategies can solve this problem.</p>
 <p><strong>2) Optimizing Model Parameters vs. Model Input</strong></p>
-<p>As mentioned above - I'm not using evolutionary strategies to find the optimal parameters for a model, I'm trying to figure out which image will most convince the model that it is an image of the number 5. The beauty of evolutionary strategies is that it can be used to optimize any sort of black box function that takes in an input and scores it. It doesn't matter too much whether the function takes in model parameters and outputs log-loss, or takes in an image and outputs a probability.</p>
+<p>As mentioned above - I'm not using evolutionary strategies to find the optimal parameters for a model, I'm trying to figure out which image will most convince the model that it is an image of the number 5, or any digit 0-9. The beauty of evolutionary strategies is that it can be used to optimize any sort of black box function that takes in an input and outputs a score. It doesn't matter too much whether the function takes in model parameters and outputs log-loss, or takes in an image and outputs a probability.</p>
 <h2>Demonstration</h2>
 <p>The algorithm is very simple - in plain English, you:</p>
 <ol>
@@ -84,7 +85,7 @@
 <p>Use the model to evaluate how the child images increase or decrease the score.</p>
 </li>
 <li>
-<p>Propose a new guess that's in the direction of the better child images and away from the worse ones.</p>
+<p>Propose a new guess that's in the direction of the better child images and away from the worse ones (a bit more technically - estimate the gradient and move in that direction).</p>
 </li>
 <li>
 <p>Repeat #'s 2-4 until you're happy with the results.</p>
@@ -101,7 +102,7 @@
 <span class="sd">    Assumes that images are all 8*8 pixels with values in the 0-16 range</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="mi">64</span><span class="p">)</span> <span class="o">*</span> <span class="mi">16</span>
-    <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">epochs</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">epochs</span><span class="p">):</span>
         <span class="n">noise</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">sd</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_children</span><span class="p">)]</span>
         <span class="n">child_scores</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">score_fn</span><span class="p">(</span><span class="n">img</span> <span class="o">+</span> <span class="n">n</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">noise</span><span class="p">])</span>
         <span class="n">child_stdev</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">child_scores</span><span class="p">)</span>
@@ -149,9 +150,13 @@
 
 <p>We can run this same process for any type of supervised learning model, the <a href="https://github.com/jarfa/jarfa.github.io/blob/content/content/blog_post_code/evolutionary_optimization.py">code to do this is on my Github page</a>. This method is convenient because we don't have to change any aspect of it for different types of models, we can just treat them as black box scoring machines. Other ways of finding the same information would require model-specific methods.</p>
 <p>Below are the ideal images for each digit for 4 different models. The y-axis labels denote the digit and the model score (in the 0-1 range) that it converged on. It's no surprise that different models differ on what they consider to be the ideal version of a given digit. It also shouldn't be too surprising that so many of these images barely look like digits - the models process and understand the data differently than we do, and they only see the 5,620 training images.</p>
-<p><img alt="Ideal Digits 0-9, By Model" src="http://jarfa.github.io/images/best_examples_models.png" /></p>
-<p>We can also create a simple ensemble model that averages the scores of the other 4 models, and find the optimal image for that model (note that this is different than finding the average of the other optimal images). The ensemble model's images look much closer to what we recognize as digits.</p>
-<p><img alt="Ideal Digits 0-9, By Model + Ensemble" src="http://jarfa.github.io/images/best_examples_plus_ensemble.png" /></p>
+<p><img src="http://jarfa.github.io/images/best_examples_models.png" alt="Ideal Digits 0-9, By Model" width="500"> 
+<em>Ideal Digits 0-9, By Model (y-axis text denotes digit: model_score)</em></p>
+<p>We can also create a simple ensemble model that averages the scores of the other 4 models, and find the optimal image for that model (note that this is different than finding the average of the other 4 optimal images). The ensemble model's images look much closer to what we recognize as digits.</p>
+<!-- ![Ideal Digits 0-9, By Model + Ensemble]({filename}/images/best_examples_plus_ensemble.png) -->
+
+<p><img src="http://jarfa.github.io/images/best_examples_plus_ensemble.png" alt="Ideal Digits 0-9, By Model + Ensemble" width="625"><br />
+<em>Ideal Digits 0-9, By Model + Ensemble</em></p>
   </div>
   <div class="tag-cloud">
     <p>
@@ -194,7 +199,7 @@
   },
   "image": "/images/halong_kayak.jpg",
   "url": "http://jarfa.github.io/evolutionary-strategies-optimization.html",
-  "description": "I recently read Ferenc Huszár's blog post summarizing recent research on how evolutionary strategies can be used in place of gradient descent or back-propagation. That research focuses on how evolutionary strategies for reinforcement learning get the same results as back-propagation in a computationally quicker way. What I'm doing ..."
+  "description": "I recently read Ferenc Huszár's blog post summarizing recent research on how evolutionary strategies can be used in place of gradient descent or back-propagation. That research focuses on how evolutionary strategies for reinforcement learning get the same results as back-propagation, but the computation is more parallelizable and therefore faster ..."
 }
 </script></body>
 </html>
