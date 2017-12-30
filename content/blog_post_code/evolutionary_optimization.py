@@ -7,14 +7,15 @@ from sklearn.linear_model import LogisticRegressionCV
 from sklearn.neural_network import MLPClassifier
 from sklearn import datasets
 
-def cutoff(x, min_c, max_c):
-    return np.minimum(np.maximum(x, min_c), max_c)
 
-def score_function(mod, ix):
+def score_factory(mod, ix):
     def _scorer(x):
-        return mod.predict_proba(x.reshape(1, -1)).reshape((10,))[ix]
+        # the predict_proba method will return the probabilities
+        # for all digits, we only want digit ix
+        return (mod.predict_proba(x.reshape(1, -1)).reshape((10,))[ix])
     
     return _scorer
+
 
 def find_best_img(score_fn, epochs, n_children, sd, lr, max_score=1):
     img = np.random.random(64) * 16
@@ -32,13 +33,15 @@ def find_best_img(score_fn, epochs, n_children, sd, lr, max_score=1):
         # see the paper and Huszar's blog post for the math behind this
         gradient = np.mean([n * s for n,s in zip(noise, child_scores)],
                            axis=0) / sd
-        img = cutoff(img + lr * gradient, 0, 16)
+        img += lr * gradient
+        img = np.clip(img, 0, 16)
         img_score = score_fn(img)
         if img_score >= max_score:
             # no reason to continue
             break
     
     return img, img_score
+
 
 digits = datasets.load_digits()
 models = dict(
@@ -76,7 +79,7 @@ for mod_name, model in models.iteritems():
     model.fit(digits.data, digits.target)
     for target in range(10):
         image, score = find_best_img(
-            score_function(model, target),
+            score_factory(model, target),
             epochs=250,
             n_children=25,
             sd=5,
@@ -87,7 +90,7 @@ for mod_name, model in models.iteritems():
 # What if we use an ensemble model?
 results["ensemble"] = {}
 def ensemble_scorer(t):
-    scorers = [score_function(m, t) for m in models.values()]
+    scorers = [score_factory(m, t) for m in models.values()]
     def _ensemble_scorer(x):
         return np.mean([s(x) for s in scorers])
 
