@@ -1,8 +1,9 @@
 Title: Reading & Eating
-Slug: reading-and-eating-jan2017
-Date: 2017-01-02
+Slug: reading-and-eating-jan2018
+Date: 2018-01-05
 Category: Blog
 Tags: food, reading&eating
+
 
 ## Reading
 1. I formed a Reinforcement Learning study group at work, so I've been watching and reading materials curated by [Denny Britz](https://github.com/dennybritz/reinforcement-learning). For a short intro to RL,
