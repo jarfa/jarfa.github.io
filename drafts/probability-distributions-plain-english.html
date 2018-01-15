@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link href='//fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,400italic' rel='stylesheet' type='text/css'>
+
+    <link rel="stylesheet" type="text/css" href="http://jarfa.github.io/theme/stylesheet/style.min.css">
+
+  <link rel="stylesheet" type="text/css" href="http://jarfa.github.io/theme/stylesheet/pygments.min.css">
+  <link rel="stylesheet" type="text/css" href="http://jarfa.github.io/theme/stylesheet/font-awesome.min.css">
+
+
+
+
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="" />
+
+<meta name="author" content="Jonathan Arfa" />
+<meta name="description" content="I've always wanted somebody to write about how to interpret probability distributions in terms of what they could represent in the real world. Wikipedia is great for telling you the PDF, CDF, MGF, mean, median, variance, etc. - but sometimes you just want the intuition. The purpose of this is ..." />
+<meta name="keywords" content="Statistics">
+<meta property="og:site_name" content="Machine Learning and Tacos"/>
+<meta property="og:title" content="Probability Distributions in Plain English"/>
+<meta property="og:description" content="I've always wanted somebody to write about how to interpret probability distributions in terms of what they could represent in the real world. Wikipedia is great for telling you the PDF, CDF, MGF, mean, median, variance, etc. - but sometimes you just want the intuition. The purpose of this is ..."/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:url" content="http://jarfa.github.io/drafts/probability-distributions-plain-english.html"/>
+<meta property="og:type" content="article"/>
+<meta property="article:published_time" content="2017-12-02 00:00:00-05:00"/>
+<meta property="article:modified_time" content=""/>
+<meta property="article:author" content="http://jarfa.github.io/author/jonathan-arfa.html">
+<meta property="article:section" content="Blog"/>
+<meta property="article:tag" content="Statistics"/>
+<meta property="og:image" content="/images/halong_kayak.jpg">
+  <title>Machine Learning and Tacos &ndash; Probability Distributions in Plain English</title>
+</head>
+<body>
+  <aside>
+    <div>
+      <a href="http://jarfa.github.io">
+        <img src="/images/halong_kayak.jpg" alt="Machine Learning and Tacos" title="Machine Learning and Tacos">
+      </a>
+      <h1><a href="http://jarfa.github.io">Machine Learning and Tacos</a></h1>
+      <p>What else?</p>
+      <nav>
+        <ul class="list">
+          <li><a href="http://jarfa.github.io/pages/about.html#about">About</a></li>
+        </ul>
+      </nav>
+      <ul class="social">
+        <li><a class="sc-twitter" href="https://twitter.com/jonarfa" target="_blank"><i class="fa fa-twitter"></i></a></li>
+        <li><a class="sc-linkedin" href="https://www.linkedin.com/in/jarfa" target="_blank"><i class="fa fa-linkedin"></i></a></li>
+        <li><a class="sc-github" href="https://github.com/jarfa/" target="_blank"><i class="fa fa-github"></i></a></li>
+      </ul>
+    </div>
+  </aside>
+  <main>
+
+<article>
+  <header>
+    <h1 id="probability-distributions-plain-english">Probability Distributions in Plain English</h1>
+    <p>Posted on Sat 02 December 2017 in <a href="http://jarfa.github.io/category/blog.html">Blog</a></p>
+  </header>
+  <div>
+    <p>I've always wanted somebody to write about how to interpret probability
+distributions in terms of what they could represent in the real world.
+Wikipedia is great for telling you the PDF, CDF, MGF, mean, median, variance,
+etc. - but sometimes you just want the intuition.</p>
+<p>The purpose of this is not to teach distributions to somebody who doesn't know
+what a probability distribution is. I'm hoping this will be useful either as an
+easy reference, or as a review for Statisticians.</p>
+<h2>OG Distributions  <!-- TODO: better name --></h2>
+<h3><a href="https://en.wikipedia.org/wiki/Uniform_distribution_(continuous)">Uniform(a, b)</a></h3>
+<p>This one is almost too simple - if you request a <em>Uniform(0, 1)</em> number,
+you get a random number that is somewhere between 0 and 1, and is equally
+likely to be at any point in that range.</p>
+<p>When people talk about the uniform distribution they usually mean the continuous version, but you can also use the <a href="https://en.wikipedia.org/wiki/Discrete_uniform_distribution">Discrete Uniform
+Distribution</a>.</p>
+<h3><a href="https://en.wikipedia.org/wiki/Normal_distribution">Normal(mean, stdev)</a></h3>
+<p>The Normal (also known as the Gaussian Distribution) comes up very often in
+Statistics due to the <a href="https://en.wikipedia.org/wiki/Central_limit_theorem">Central Limit Theorem
+</a>.</p>
+<p>Basically, when you add up a large number of independent random variables, the distribution of their sum will look Normal - especially as the number of random variables you add up increases.</p>
+<p>This distribution can be generalized into the <a href="https://en.wikipedia.org/wiki/Multivariate_normal_distribution">Multivariate Normal
+</a>.</p>
+<h3><a href="https://en.wikipedia.org/wiki/Log-normal_distribution">Log-Normal(mean, stdev)</a></h3>
+<p>The logarithm of a log-normal distributed random variable is normally
+distributed. Or, if <em>X</em> is normally distributed, then <em>exp(X)</em> is log-normally
+distributed.</p>
+<p>The parameters are usually the mean and standard deviation of the normal
+distribution you would get if you took the log of this distribution - not the
+mean and standard deviation of the Log-Normal itself.</p>
+<p>If the Normal Distribution represents the sum of random variables, then the
+Log-Normal can represent the product. It is also used to describe financial
+returns (with some controversy) and social phenomena such as city sizes.</p>
+<h2>Distributions That Can Be Used For Coin-Flipping Problems</h2>
+<h3><a href="https://en.wikipedia.org/wiki/Bernoulli_distribution">Bernoulli(p)</a></h3>
+<p>You flip one coin and you count the result as 1 if you get heads, 0 if you get
+tails. The parameter <em>p</em> is just the probability of getting heads. People use
+the phrase "bernoulli trial" to refer to any sort of coin-flip situation.</p>
+<p>The multivariate (more than 2 categories) generalization of this distribution
+is the <a href="https://en.wikipedia.org/wiki/Categorical_distribution">Categorical</a>.</p>
+<h3><a href="https://en.wikipedia.org/wiki/Beta_distribution">Beta(alpha, beta)</a></h3>
+<p>You can think of this as a probability distribution over possible values of a
+coin's probability of landing heads. The support (range of numbers it can
+return) is <em>[0, 1]</em>. Alpha and beta can represent observed successes (heads)
+and failures (tails). A <em>Beta(1, 1)</em> distribution is the same as <em>Unif(0, 1)</em>.</p>
+<p>A quip example of its use: let's say we want to know what the probability of a
+certain coin coming up heads is. If we flip it 10 times and get 7 heads and 3
+tails, and we have a uniform (<em>Beta(1, 1)</em>) prior, then our posterior
+distribution over possible values of <em>p</em> is <em>Beta(8, 4)</em> (i.e.
+<em>Beta(7+1, 3+1)</em>). The prior here is a bit like saying "pretend we also saw 1
+additional heads and 1 additional tails".</p>
+<p>The multivariate generalization of this distribution is the
+<a href="https://en.wikipedia.org/wiki/Dirichlet_distribution">Dirichlet</a>.</p>
+<p>Most Statisticians I know have an emotional attachment to the Beta
+distribution. There's something very elegant and easy about it. It's very
+commonly used as a prior in Bayesian models.</p>
+<h3><a href="https://en.wikipedia.org/wiki/Binomial_distribution">Binomial(n, p)</a></h3>
+<p>What if you flip <em>n</em> coins, all of which have the same probability <em>p</em>, and
+want to know how many heads you get? That's the binomial distribution. Many
+common coin-flipping probability questions are simply asking you to use this
+distribution.</p>
+<p>To be clear, <em>Binomial(1, p)</em> is the same as <em>Bernoulli(p)</em>.</p>
+<p>The multivariate generalization of this distribution is the <a href="https://en.wikipedia.org/wiki/Multinomial_distribution">Multinomial</a>.</p>
+<h3><a href="https://en.wikipedia.org/wiki/Hypergeometric_distribution">Hypergeometric(N, K, n)</a></h3>
+<!-- TODO -->
+
+<h3><a href="https://en.wikipedia.org/wiki/Negative_binomial_distribution">Negative Binomial(r, p)</a></h3>
+<p>If you have a coin that returns heads with probability <em>p</em>, how many flips will
+you need before you get <em>r</em> tails?</p>
+<h2>Blah Blah</h2>
+<!-- TODO -->
+
+<h3><a href="https://en.wikipedia.org/wiki/Poisson_distribution">Poisson(lambda)</a></h3>
+<p>A discrete distribution</p>
+<h3><a href="https://en.wikipedia.org/wiki/Exponential_distribution">Exponential(lambda)</a></h3>
+<p>Blah blah. The Exponential distribution can also be thought
+as representing the time between events in a Poisson process.</p>
+<p>Some people get confused by this distribution's name because there is also a
+general class of distributions called the <a href="https://en.wikipedia.org/wiki/Exponential_family">Exponential Family</a>.
+Many distributions on this list are part of that family, but the Exponential
+distribution does not have a special relationship with it.</p>
+<h3>Gamma()</h3>
+<!-- TODO -->
+
+<h3><a href="https://en.wikipedia.org/wiki/Weibull_distribution">Weibull()</a></h3>
+<!-- TODO see http://www.weibull.com/hotwire/issue14/relbasics14.htm-->
+  </div>
+  <div class="tag-cloud">
+    <p>
+      <a href="http://jarfa.github.io/tag/statistics.html">Statistics</a>
+    </p>
+  </div>
+</article>
+
+    <footer>
+        <p>&copy; Jonathan Arfa </p>
+<p>Built using <a href="http://getpelican.com" target="_blank">Pelican</a> - <a href="https://github.com/alexandrevicenzi/flex" target="_blank">Flex</a> theme by <a href="http://alexandrevicenzi.com" target="_blank">Alexandre Vicenzi</a></p>    </footer>
+  </main>
+
+<!-- Google Analytics -->
+<script type="text/javascript">
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-78236307-1', 'auto');
+  ga('send', 'pageview');
+</script>
+<!-- End Google Analytics -->
+
+
+
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "BlogPosting",
+  "name": "Probability Distributions in Plain English",
+  "headline": "Probability Distributions in Plain English",
+  "datePublished": "2017-12-02 00:00:00-05:00",
+  "dateModified": "",
+  "author": {
+    "@type": "Person",
+    "name": "Jonathan Arfa",
+    "url": "http://jarfa.github.io/author/jonathan-arfa.html"
+  },
+  "image": "/images/halong_kayak.jpg",
+  "url": "http://jarfa.github.io/drafts/probability-distributions-plain-english.html",
+  "description": "I've always wanted somebody to write about how to interpret probability distributions in terms of what they could represent in the real world. Wikipedia is great for telling you the PDF, CDF, MGF, mean, median, variance, etc. - but sometimes you just want the intuition. The purpose of this is ..."
+}
+</script></body>
+</html>

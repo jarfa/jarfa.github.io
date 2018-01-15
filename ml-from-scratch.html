@@ -17,11 +17,11 @@
   <meta name="robots" content="" />
 
 <meta name="author" content="Jonathan Arfa" />
-<meta name="description" content="A self-lead refresher course in basic ML algorithms I'm in the process of implementing various machine learning algorithms from scratch and will write a short series of blogs posts about this project. This first post will be about what motivated this project and a bit about what I've ..." />
+<meta name="description" content="A self-lead refresher course in basic ML algorithms I'm in the process of implementing various machine learning algorithms from scratch. For now the algorithms include: Regression (logistic and least squares) via gradient descent Decision Trees Random Forests I'll be benchmarking these algorithms on the handwritten digits dataset that ..." />
 <meta name="keywords" content="Machine Learning">
 <meta property="og:site_name" content="Machine Learning and Tacos"/>
-<meta property="og:title" content="Machine Learning From Scratch - Pt. I"/>
-<meta property="og:description" content="A self-lead refresher course in basic ML algorithms I'm in the process of implementing various machine learning algorithms from scratch and will write a short series of blogs posts about this project. This first post will be about what motivated this project and a bit about what I've ..."/>
+<meta property="og:title" content="Machine Learning From Scratch"/>
+<meta property="og:description" content="A self-lead refresher course in basic ML algorithms I'm in the process of implementing various machine learning algorithms from scratch. For now the algorithms include: Regression (logistic and least squares) via gradient descent Decision Trees Random Forests I'll be benchmarking these algorithms on the handwritten digits dataset that ..."/>
 <meta property="og:locale" content="en_US"/>
 <meta property="og:url" content="http://jarfa.github.io/ml-from-scratch.html"/>
 <meta property="og:type" content="article"/>
@@ -31,7 +31,7 @@
 <meta property="article:section" content="Blog"/>
 <meta property="article:tag" content="Machine Learning"/>
 <meta property="og:image" content="/images/halong_kayak.jpg">
-  <title>Machine Learning and Tacos &ndash; Machine Learning From Scratch - Pt. I</title>
+  <title>Machine Learning and Tacos &ndash; Machine Learning From Scratch</title>
 </head>
 <body>
   <aside>
@@ -57,12 +57,12 @@
 
 <article>
   <header>
-    <h1 id="ml-from-scratch">Machine Learning From Scratch - Pt. I</h1>
+    <h1 id="ml-from-scratch">Machine Learning From Scratch</h1>
     <p>Posted on Tue 03 January 2017 in <a href="http://jarfa.github.io/category/blog.html">Blog</a></p>
   </header>
   <div>
     <h2>A self-lead refresher course in basic ML algorithms</h2>
-<p>I'm in the process of <a href="https://github.com/jarfa/ML_from_scratch">implementing various machine learning algorithms from scratch</a> and will write a short series of blogs posts about this project. This first post will be about what motivated this project and a bit about what I've learned. Further posts will compare my algorithms' performance vs. that of the algorithms in <a href="http://scikit-learn.org/stable/">scikit-learn</a>, and will attempt to walk the reader through how these algorithms work.</p>
+<p>I'm in the process of <a href="https://github.com/jarfa/ML_from_scratch">implementing various machine learning algorithms from scratch</a>.</p>
 <p>For now the algorithms include:</p>
 <ul>
 <li>
@@ -72,7 +72,7 @@
 <p>Decision Trees</p>
 </li>
 <li>
-<p>Random Forests  </p>
+<p>Random Forests</p>
 </li>
 </ul>
 <!-- *  Gradient Boosted Trees -->
@@ -83,22 +83,28 @@
 <p>This project was inspired by a hackathon in the Spring of 2016 when I was working on the engineering team at Magnetic. At Magnetic I had been working on our machine learning systems that used <a href="https://github.com/JohnLangford/vowpal_wabbit">Vowpal Wabbit</a>, and in this hackathon we implemented a similar logistic regression solver in the Go language - which we called Gowpal Wabbit (a large part of projects at Magnetic involved arguing about how to construct a witty/punny name, Gowpal Wabbit was not our most clever). My colleague Dan Crosta wrote a great blog post about <a href="https://late.am/post/2016/04/22/demystifying-logistic-regression.html">what he learned about logistic regression</a> from the process.</p>
 <p>While I had learned a lot about the most commonly used algorithms in grad school and at work, writing logistic regression from scratch and teaching a team of software engineers the math and intuition beyond the gradient descent solver made me think much harder about the various choices that go into writing a working implementation. It was a surprisingly educational experience.</p>
 <p>Since then I've changed jobs, and after a traveling a lot in the Summer and Fall of 2016 I've found some free time again. I am (intermittently) writing some of the more commonly used ML algorithms from near-scratch and comparing their performance (both in terms of predictive power and computational efficiency) versus scikit-learn.</p>
-<p>Note: these algorithms exist for my re-education and very little else. My algorithms will hopefully be just as good at prediction as scikit-learn's options, but theirs are more fully-featured and are much faster (since they're written in <a href="http://cython.org/">Cython</a>). There is no reason anybody should be using my algorithms unless they find my code educational.</p>
+<p>These algorithms exist for me to review what I learned in grad school, and very little else. My algorithms will hopefully be just as good at prediction as scikit-learn's options, but theirs are more fully-featured and are much faster (since they're written in <a href="http://cython.org/">Cython</a>). There is no reason anybody should be using my algorithms unless they find my code educational.</p>
 <p>I had a few self-imposed rules for this project:</p>
 <ul>
 <li>
 <p>Along with writing the machine learning algorithms, rewrite any necessary utility functions - within reason. For example, I used numpy instead of creating my own linear algebra library, but wrote from scratch performance metrics (LogLoss, ROC AUC), feature normalization, etc.</p>
 </li>
 <li>
-<p>Don't just look at scikit-learn's code and copy what they do, I should implement things my way. But my algorithms' variable and method names are similar to theirs to simplify my demonstration code, and in some cases I looked through their code after my code was already working.</p>
+<p>Don't just look at scikit-learn's code and copy what they do, I should implement things my way. But my algorithms' variable and method names are similar to theirs to simplify my benchmarking code, and in some cases I looked through their code after my code was already working.</p>
 </li>
 <li>
 <p>Make my code user-friendly - it should have a sane interface and readable code.</p>
 </li>
 <li>
-<p>Don't go crazy - I'm not going to rewrite my algorithms in Cython or make the code <a href="http://pypy.org/">PyPy</a> compatible in order to match scikit-learn's speed. The value of this project to me is about making sure I know how to implement these algorithms efficiently, not about minimizing the actual time they require.</p>
+<p>Don't go crazy about efficiency - I'm not going to rewrite my algorithms in Cython or make the code <a href="http://pypy.org/">PyPy</a> compatible in order to match scikit-learn's speed. The value of this project to me is about making sure I know how to implement these algorithms efficiently, not about minimizing the actual time they require.</p>
 </li>
 </ul>
+<h2>Benchmarking Results</h2>
+<p>My algorithms are about as good on the validation set as scikit-learn's algorithms, but much slower. For each digit (0-9) and for each model source (from scratch vs. scikit-learn) I trained and tested a model 3 times on different train/test splits.</p>
+<p>Here I'm comparing the predictive performance of my models vs scikit-learn's in terms of ROC AUC and normalized Log Loss.
+<img alt="perf_by_source" src="{https://raw.githubusercontent.com/jarfa/ML_from_scratch/master/benchmarking/plots/test_perf_by_model.png" /><em>perf_by_source</em></p>
+<p>I also compared the different types of models ability to predict different digits. Some digits seem to be harder for these simple models classify. 8 and 9 were especially difficult, while 6 was easy.
+<img alt="perf_by_target" src="{https://raw.githubusercontent.com/jarfa/ML_from_scratch/master/benchmarking/plots/perf_by_target.png}" /><em>perf_by_target</em></p>
 <h2>Lessons Learned</h2>
 <p>Forcing yourself to rewrite from scratch algorithms you think you already know is full of fun discoveries. Things I learned (most of which seem obvious in retrospect) include:</p>
 <ul>
@@ -106,14 +112,13 @@
 <p>Something that should have been obvious beforehand - in gradient descent your learning rate and regularization rate should depend greatly on the minibatch size.</p>
 </li>
 <li>
-<p>In an attempt to mimic Vowpal Wabbit's behavior, my first implementation of regression SGD used a hash table (the Python dictionary) to store the coefficients. While this allowed a lot of flexibility when dealing with sparse or categorical data, it resulted in a massive speed hit - especially when regularizing the coefficients. I could have made the hash table work well had I pre-allocated a large array of coefficients and hashed features for the user like VW does. For now I just require the user to turn their data into an array of floats before training the model, but a feature hasher would be easy to implement.
-ow lo</p>
+<p>In an attempt to mimic Vowpal Wabbit's behavior, my first implementation of regression SGD used a hash table (the Python dictionary) to store the coefficients. While this allowed a lot of flexibility when dealing with sparse or categorical data, it resulted in a massive speed hit - especially when regularizing the coefficients. I could have made the hash table work well had I pre-allocated a large array of coefficients and hashed features for the user like VW does. For now I just require the user to turn their data into an array of floats before training the model, but a feature hasher would be easy to implement.</p>
 </li>
 <li>
 <p>Writing a fast decision tree algorithm is hard. My implementation is orders of magnitude slower than scikit-learn's, and it could stand to be looked over carefully and optimized. Perhaps I'll go back and do that before I implement new algorithms.</p>
 </li>
 <li>
-<p>Implementing the <a href="https://en.wikipedia.org/wiki/Receiver_operating_characteristic">ROC AUC</a> metrics naively will run in O(N^2) time - but with a bit of thought, you can make it run in <a href="https://github.com/jarfa/ML_from_scratch/blob/12d91ee4109410855b09aa7da9df345ae79e117d/util.py#L40">O(N) time</a>.</p>
+<p>Implementing the <a href="https://en.wikipedia.org/wiki/Receiver_operating_characteristic">ROC AUC</a> metric naively will run in O(N^2) time - but with a bit of thought, you can make it run in <a href="https://github.com/jarfa/ML_from_scratch/blob/12d91ee4109410855b09aa7da9df345ae79e117d/util.py#L40">O(N) time</a>.</p>
 </li>
 <li>
 <p><a href="http://ggplot2.org/">R's ggplot2</a> package still has no peer among Python packages for graphics. For a while I've been doing most of my coding in Python, then moving my results to R for plotting with ggplot2. I wanted to use <a href="http://ggplot.yhathq.com/">Python's reimplmentation of ggplot</a> in this project to chart algorithm performance, but it's missing many crucial features and cannot yet replace R's version. <a href="http://seaborn.pydata.org/">Seaborn</a> is similar to ggplot2 in many ways, but is not quite as flexible. And while <a href="http://matplotlib.org/">matplotlib</a> is incredibly flexible, the the brevity and power of R's ggplot2 is far more appealing to me.</p>
@@ -150,8 +155,8 @@ ow lo</p>
 {
   "@context": "http://schema.org",
   "@type": "BlogPosting",
-  "name": "Machine Learning From Scratch - Pt. I",
-  "headline": "Machine Learning From Scratch - Pt. I",
+  "name": "Machine Learning From Scratch",
+  "headline": "Machine Learning From Scratch",
   "datePublished": "2017-01-03 00:00:00-05:00",
   "dateModified": "",
   "author": {
@@ -161,7 +166,7 @@ ow lo</p>
   },
   "image": "/images/halong_kayak.jpg",
   "url": "http://jarfa.github.io/ml-from-scratch.html",
-  "description": "A self-lead refresher course in basic ML algorithms I'm in the process of implementing various machine learning algorithms from scratch and will write a short series of blogs posts about this project. This first post will be about what motivated this project and a bit about what I've ..."
+  "description": "A self-lead refresher course in basic ML algorithms I'm in the process of implementing various machine learning algorithms from scratch. For now the algorithms include: Regression (logistic and least squares) via gradient descent Decision Trees Random Forests I'll be benchmarking these algorithms on the handwritten digits dataset that ..."
 }
 </script></body>
 </html>
