@@ -6,7 +6,7 @@ import os
 AUTHOR = u'Jonathan Arfa'
 SITENAME = u'Machine Learning and Tacos'
 # SITEURL = 'http://localhost:8000'
-SITEURL = 'http://machinelearningandtacos.com'
+SITEURL = 'http://jonathanarfa.com'
 
 
 THEME = os.path.join(os.path.expanduser('~'), "pelican-themes/flex")

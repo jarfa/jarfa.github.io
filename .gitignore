@@ -64,5 +64,8 @@ target/
 # Ipython Notebook
 .ipynb_checkpoints
 
+# pids
+*.pid
+
 # Dropbox
 .DS_Store
